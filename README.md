@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# Meu Portfólio 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Bem-vindo ao repositório do meu portfólio pessoal! Este projeto foi desenvolvido para apresentar meus projetos, habilidades e experiências como desenvolvedor. Ele possui um design moderno, animações interativas e elementos em 3D para proporcionar uma experiência visual incrível aos visitantes.
 
-Currently, two official plugins are available:
+## 🛠️ Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Este projeto foi construído com as seguintes tecnologias e bibliotecas:
 
-## React Compiler
+- **[React](https://react.dev/)** - Biblioteca JavaScript para construção de interfaces de usuário de forma eficiente.
+- **[TypeScript](https://www.typescriptlang.org/)** - Superset do JavaScript que adiciona tipagem estática e maior segurança ao código.
+- **[Vite](https://vitejs.dev/)** - Ferramenta de build moderna e extremamente rápida para o ecossistema web.
+- **[Tailwind CSS (v4)](https://tailwindcss.com/)** - Framework CSS *utility-first* para estilização ágil e design responsivo.
+- **[Motion (Framer Motion)](https://motion.dev/)** - Biblioteca poderosa para criar animações fluidas e interativas em componentes React.
+- **[Three.js](https://threejs.org/)** - Biblioteca JavaScript usada para criar e exibir gráficos 3D no navegador.
+- **[React Icons](https://react-icons.github.io/react-icons/)** - Coleção de ícones populares facilmente integráveis com o React.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Estrutura e Seções
 
-## Expanding the ESLint configuration
+O portfólio é composto por diversas seções interativas:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Hero:** Uma área de destaque inicial com animações imersivas.
+- **Sobre Mim (About):** Informações sobre minha jornada, estudos e perfil profissional.
+- **Habilidades (Skills):** Um panorama das tecnologias, linguagens e ferramentas que domino.
+- **Projetos (Projects):** Uma galeria com os principais trabalhos e aplicações que desenvolvi.
+- **Contato (Contact):** Seção para entrar em contato comigo e links para as minhas redes profissionais.
+- **Componentes Personalizados:** Inclui efeitos avançados como decriptação de texto e integrações em 3D.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🚀 Como rodar o projeto localmente
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Siga os passos abaixo para executar o projeto na sua máquina local:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. **Clone este repositório:**
+   ```bash
+   git clone https://github.com/caioeduardoml/Portifolio.git
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. **Acesse a pasta do projeto:**
+   ```bash
+   cd PortifolioReact
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+3. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+4. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Acesse no seu navegador:**
+   Abra `http://localhost:5173` para visualizar o portfólio.
+
+## 👨‍💻 Autor
+
+Desenvolvido por **Caio Eduardo** ([caioeduardoml](https://github.com/caioeduardoml)).
+
+---
+⭐️ Se você gostou deste projeto, sinta-se à vontade para deixar uma estrela no repositório!
