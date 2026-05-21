@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .perspective-\[2000px\] {
+    perspective: 2000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .face3d {
+    backface-visibility: visible;
+  }
+}
