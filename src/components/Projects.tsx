@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   FaLaptopCode,
   FaQrcode,
@@ -8,6 +8,7 @@ import {
   FaExternalLinkAlt,
 } from 'react-icons/fa';
 import type { ProjectCategory, ProjectItem } from '~types/portfolio';
+import { fetchGitHubRepos, mapGitHubReposToProjects } from '@/services/githubApi';
 
 const PROJECTS_DATA: ProjectItem[] = [
   {
@@ -187,10 +188,45 @@ ProjectCard.displayName = 'ProjectCard';
 
 export const Projects: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ProjectCategory>('todos');
+  const [githubProjects, setGithubProjects] = useState<ProjectItem[]>([]);
+  const [isSyncingGithub, setIsSyncingGithub] = useState<boolean>(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadGithubRepos = async (): Promise<void> => {
+      try {
+        const repos = await fetchGitHubRepos(controller.signal);
+        const existingUrls = new Set(
+          PROJECTS_DATA.map((p) => p.githubUrl?.replace(/\/+$/, '').toLowerCase()).filter(
+            (url): url is string => Boolean(url)
+          )
+        );
+        const mapped = mapGitHubReposToProjects(repos, existingUrls);
+        if (!controller.signal.aborted) {
+          setGithubProjects(mapped);
+        }
+      } catch {
+        // Mantem os projetos locais em caso de indisponibilidade ou limite da API
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsSyncingGithub(false);
+        }
+      }
+    };
+
+    void loadGithubRepos();
+    return () => controller.abort();
+  }, []);
+
+  const allProjects = useMemo<ProjectItem[]>(
+    () => [...PROJECTS_DATA, ...githubProjects],
+    [githubProjects]
+  );
 
   const filteredProjects = useMemo<ProjectItem[]>(
-    () => PROJECTS_DATA.filter((project) => project.categories.includes(activeTab)),
-    [activeTab]
+    () => allProjects.filter((project) => project.categories.includes(activeTab)),
+    [allProjects, activeTab]
   );
 
   return (
@@ -221,11 +257,11 @@ export const Projects: React.FC = () => {
         <div
           role="tablist"
           aria-label="Filtrar projetos por categoria"
-          className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12"
+          className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6"
         >
           {FILTER_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
-            const count = PROJECTS_DATA.filter((p) => p.categories.includes(tab.id)).length;
+            const count = allProjects.filter((p) => p.categories.includes(tab.id)).length;
             return (
               <button
                 key={tab.id}
@@ -252,6 +288,16 @@ export const Projects: React.FC = () => {
               </button>
             );
           })}
+        </div>
+
+        {/* Status de Sincronizacao com o GitHub */}
+        <div className="flex justify-center mb-10">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono-code bg-white/5 light:bg-slate-100 border border-white/10 light:border-slate-200 text-slate-400 light:text-slate-600">
+            <FaGithub className="text-[#39FF14] light:text-emerald-700" />
+            {isSyncingGithub
+              ? 'Sincronizando repositórios públicos do GitHub...'
+              : `${githubProjects.length} repositórios sincronizados em tempo real via GitHub`}
+          </span>
         </div>
 
         {/* Grid de Projetos */}
