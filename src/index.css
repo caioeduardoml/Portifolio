@@ -1,13 +1,100 @@
 @import "tailwindcss";
 
+@custom-variant light (&:where([data-theme=light], [data-theme=light] *));
+
+:root {
+  --bg-primary: #07090e;
+  --bg-secondary: #0c1017;
+  --bg-card: rgba(17, 23, 34, 0.78);
+  --bg-card-solid: #111722;
+  --bg-elevated: rgba(255, 255, 255, 0.04);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --accent-neon: #39ff14;
+  --accent-solid: #10b981;
+  --accent-text: #39ff14;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(57, 255, 20, 0.35);
+  --shadow-glow: 0 20px 50px -15px rgba(57, 255, 20, 0.14);
+  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --bg-card-solid: #ffffff;
+  --bg-elevated: rgba(15, 23, 42, 0.04);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+  --accent-neon: #16a34a;
+  --accent-solid: #15803d;
+  --accent-text: #15803d;
+  --border-subtle: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(22, 163, 74, 0.45);
+  --shadow-glow: 0 20px 50px -15px rgba(22, 163, 74, 0.15);
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-code {
+  font-family: var(--font-mono);
+}
+
 @layer utilities {
   .perspective-\[2000px\] {
     perspective: 2000px;
+  }
+  .perspective-\[1200px\] {
+    perspective: 1200px;
   }
   .preserve-3d {
     transform-style: preserve-3d;
   }
   .face3d {
     backface-visibility: visible;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}
+
+/* Foco visivel para navegacao por teclado (WCAG 2.1 AA) */
+:focus-visible {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 3px;
+}
+
+/* Respeito a preferencia de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -1,164 +1,172 @@
-import { useEffect, useRef } from 'react';
-import DecryptedText from './DecryptedText';
+import React, { useState, useCallback, lazy } from 'react';
+import { FaArrowRight, FaChevronDown } from 'react-icons/fa';
+import DecryptedText from '~components/DecryptedText';
+import SuspenseLoader from '~components/SuspenseLoader';
+import type { HeroVisualMode } from '~types/portfolio';
 
-export default function Hero() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+const HeroScene3D = lazy(() => import('~components/HeroScene3D'));
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+interface HeroProps {
+  isLight: boolean;
+}
 
-    let w = (canvas.width = window.innerWidth);
-    let h = (canvas.height = window.innerHeight);
-    let mouse = { x: false as number | false, y: false as number | false };
-    let last_target = { x: w / 2, y: h / 2 };
-    let target = { x: w / 2, y: h / 2, errx: 0, erry: 0 };
-    let t = 0;
-    let q = 10;
+const HERO_TAGS: string[] = [
+  'Engenheiro da Computação',
+  'React & TypeScript',
+  'Flutter Mobile',
+  'C / C++ & Sistemas',
+  'Python',
+  '.NET',
+  'Linux',
+];
 
-    const isMobileOrTablet = () => window.innerWidth <= 1024;
-    const dist = (p1x: number, p1y: number, p2x: number, p2y: number) =>
-      Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
+const VISUAL_MODES: { id: HeroVisualMode; label: string }[] = [
+  { id: 'hybrid', label: 'Híbrido 3D' },
+  { id: '3d', label: 'Núcleo 3D' },
+  { id: 'synapse', label: 'Sinapses' },
+];
 
-    class Segment {
-      first: boolean; pos: { x: number; y: number }; l: number; ang: number; nextPos: { x: number; y: number };
-      constructor(parent: any, l: number, a: number, first: boolean) {
-        this.first = first;
-        this.pos = first ? { x: parent.x, y: parent.y } : { x: parent.nextPos.x, y: parent.nextPos.y };
-        this.l = l;
-        this.ang = a;
-        this.nextPos = { x: this.pos.x + this.l * Math.cos(this.ang), y: this.pos.y + this.l * Math.sin(this.ang) };
+export const Hero: React.FC<HeroProps> = ({ isLight }) => {
+  const [visualMode, setVisualMode] = useState<HeroVisualMode>('hybrid');
+
+  const scrollToSection = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, targetId: string): void => {
+      e.preventDefault();
+      if (!/^#[a-zA-Z][a-zA-Z0-9_-]*$/.test(targetId)) return;
+      const target = document.getElementById(targetId.slice(1));
+      if (target) {
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
       }
-      update(t: { x: number; y: number }) {
-        this.ang = Math.atan2(t.y - this.pos.y, t.x - this.pos.x);
-        this.pos.x = t.x + this.l * Math.cos(this.ang - Math.PI);
-        this.pos.y = t.y + this.l * Math.sin(this.ang - Math.PI);
-        this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang);
-        this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang);
-      }
-      fallback(t: { x: number; y: number }) {
-        this.pos.x = t.x; this.pos.y = t.y;
-        this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang);
-        this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang);
-      }
-      show() { ctx!.lineTo(this.nextPos.x, this.nextPos.y); }
-    }
-
-    class Tentacle {
-      x: number; y: number; l: number; n: number; rand: number; segments: Segment[]; dt: number = 0; angle: number = 0; t: any = {};
-      constructor(x: number, y: number, l: number, n: number) {
-        this.x = x; this.y = y; this.l = l; this.n = n; this.rand = Math.random();
-        this.segments = [new Segment(this, this.l / this.n, 0, true)];
-        for (let i = 1; i < this.n; i++) this.segments.push(new Segment(this.segments[i - 1], this.l / this.n, 0, false));
-      }
-      move(last_target: { x: number; y: number }, target: { x: number; y: number }) {
-        this.angle = Math.atan2(target.y - this.y, target.x - this.x);
-        this.dt = dist(last_target.x, last_target.y, target.x, target.y) + 5;
-        this.t = { x: target.x - 0.8 * this.dt * Math.cos(this.angle), y: target.y - 0.8 * this.dt * Math.sin(this.angle) };
-        if (this.t.x) this.segments[this.n - 1].update(this.t); else this.segments[this.n - 1].update(target);
-        for (let i = this.n - 2; i >= 0; i--) this.segments[i].update(this.segments[i + 1].pos);
-        if (dist(this.x, this.y, target.x, target.y) <= this.l + dist(last_target.x, last_target.y, target.x, target.y)) {
-          this.segments[0].fallback({ x: this.x, y: this.y });
-          for (let i = 1; i < this.n; i++) this.segments[i].fallback(this.segments[i - 1].nextPos);
-        }
-      }
-      show(target: { x: number; y: number }) {
-        if (dist(this.x, this.y, target.x, target.y) <= this.l) {
-          ctx!.globalCompositeOperation = 'lighter'; ctx!.beginPath(); ctx!.moveTo(this.x, this.y);
-          for (let i = 0; i < this.n; i++) this.segments[i].show();
-          ctx!.strokeStyle = 'hsl(120, 100%, ' + (this.rand * 30 + 45) + '%)'; ctx!.lineWidth = this.rand * 2 + 1;
-          ctx!.lineCap = 'round'; ctx!.lineJoin = 'round'; ctx!.shadowBlur = 8; ctx!.shadowColor = '#39FF14';
-          ctx!.stroke(); ctx!.shadowBlur = 0; ctx!.globalCompositeOperation = 'source-over';
-        }
-      }
-      show2(target: { x: number; y: number }) {
-        ctx!.beginPath();
-        if (dist(this.x, this.y, target.x, target.y) <= this.l) {
-          ctx!.arc(this.x, this.y, 2 * this.rand + 1, 0, 2 * Math.PI); ctx!.fillStyle = 'white';
-        } else {
-          ctx!.arc(this.x, this.y, this.rand * 2, 0, 2 * Math.PI); ctx!.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        }
-        ctx!.fill();
-      }
-    }
-
-    let maxl = 300, minl = 50, numSegments = 30, numt = window.innerWidth < 768 ? 35 : 65, tent: Tentacle[] = [];
-    for (let i = 0; i < numt; i++) tent.push(new Tentacle(Math.random() * w, Math.random() * h, Math.random() * (maxl - minl) + minl, numSegments));
-
-    function draw() {
-      if (mouse.x !== false && mouse.y !== false) {
-        target.errx = (mouse.x as number) - target.x; target.erry = (mouse.y as number) - target.y;
-      } else {
-        target.errx = w / 2 + ((h / 2 - q) * Math.sqrt(2) * Math.cos(t)) / (Math.pow(Math.sin(t), 2) + 1) - target.x;
-        target.erry = h / 2 + ((h / 2 - q) * Math.sqrt(2) * Math.cos(t) * Math.sin(t)) / (Math.pow(Math.sin(t), 2) + 1) - target.y;
-      }
-      target.x += target.errx / 10; target.y += target.erry / 10; t += 0.01;
-      ctx!.beginPath(); ctx!.arc(target.x, target.y, dist(last_target.x, last_target.y, target.x, target.y) + 2, 0, 2 * Math.PI);
-      ctx!.fillStyle = 'hsl(120, 100%, 35%)'; ctx!.fill();
-      for (let i = 0; i < numt; i++) { tent[i].move(last_target, target); tent[i].show2(target); }
-      for (let i = 0; i < numt; i++) tent[i].show(target);
-      last_target.x = target.x; last_target.y = target.y;
-    }
-
-    let animationId: number;
-    const monsterLoop = () => { ctx.clearRect(0, 0, w, h); draw(); animationId = requestAnimationFrame(monsterLoop); };
-    monsterLoop();
-
-    const handleMouseMove = (e: MouseEvent) => { 
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left; 
-      mouse.y = e.clientY - rect.top; 
-    };
-    const handleMouseLeave = () => { mouse.x = false; mouse.y = false; };
-    const handleResize = () => {
-      w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight;
-      tent = [];
-      for (let i = 0; i < numt; i++) tent.push(new Tentacle(Math.random() * w, Math.random() * h, Math.random() * (maxl - minl) + minl, numSegments));
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  const tags = ['Desenvolvedor web/mobile', 'Reactjs', 'TypeScript', 'Flutter', 'C/C++', 'Python', '.NET', 'Linux'];
+    },
+    []
+  );
 
   return (
-    <section id="home" className="p-0 h-screen overflow-hidden flex items-center justify-center bg-[#0a0a0a] relative">
-      <canvas ref={canvasRef} id="monsterCanvas" className="absolute top-0 left-0 w-full h-full z-10 opacity-100 dark:opacity-100 transition-opacity duration-300 pointer-events-none lg:pointer-events-auto" />
-      <div className="relative z-20 text-center pointer-events-none max-w-[800px] px-5">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-5 tracking-tight text-[#ffffff] data-[theme=light]:text-[#1a1a1a]">
+    <section
+      id="home"
+      aria-labelledby="hero-heading"
+      className="relative min-h-dvh w-full flex flex-col justify-between items-center pt-28 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-10 overflow-hidden bg-[var(--bg-primary)] transition-colors duration-300"
+    >
+      {/* Cena 3D Interativa em Background */}
+      <SuspenseLoader minHeightClass="min-h-0" label="Inicializando motor 3D...">
+        <HeroScene3D visualMode={visualMode} isLight={isLight} />
+      </SuspenseLoader>
+
+      {/* Espacador superior para equilibrar o centro vertical */}
+      <div aria-hidden="true" className="hidden sm:block h-2" />
+
+      {/* Conteudo Principal */}
+      <div className="relative z-20 w-full max-w-4xl mx-auto text-center flex flex-col items-center my-auto">
+        {/* Badge de Especialidade */}
+        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/6 light:bg-white/90 border border-white/12 light:border-slate-300/90 backdrop-blur-md mb-6 shadow-sm">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#39FF14] light:bg-emerald-500 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#39FF14] light:bg-emerald-600" />
+          </span>
+          <span className="text-xs sm:text-sm font-medium text-slate-200 light:text-slate-700 tracking-wide">
+            Engenheiro da Computação
+          </span>
+        </div>
+
+        {/* Titulo com Efeito de Decriptacao */}
+        <h1
+          id="hero-heading"
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.12] mb-5 text-white light:text-slate-900 font-display"
+        >
           <DecryptedText
-            text="Olá, Eu sou Caio Eduardo"
-            speed={150}
-            maxIterations={30}
-            characters="ABCD1234!?"
-            className="revealed"
-            parentClassName="all-letters"
-            encryptedClassName="encrypted"
+            text="Olá, eu sou Caio Eduardo"
+            speed={90}
+            maxIterations={22}
+            characters="ABCD0123456789<>/#"
+            className="text-white light:text-slate-900"
+            parentClassName="inline-block"
+            encryptedClassName="text-[#39FF14] light:text-emerald-600"
             animateOn="view"
-            />
+          />
         </h1>
-        <p className="text-base md:text-lg text-gray-300 data-[theme=light]:text-gray-700 leading-relaxed mb-8">
-          Construindo experiências digitais modernas, eficientes e interativas através de aplicações web, mobile e sistemas performáticos.
+
+        {/* Subtitulo */}
+        <p className="text-base sm:text-lg md:text-xl text-slate-300 light:text-slate-600 max-w-2xl mx-auto leading-relaxed mb-7 px-1">
+          Construindo experiências digitais modernas, eficientes e interativas através de aplicações{' '}
+          <span className="text-white light:text-slate-900 font-semibold">web</span>,{' '}
+          <span className="text-white light:text-slate-900 font-semibold">mobile</span> e{' '}
+          <span className="text-[#39FF14] light:text-emerald-700 font-semibold">
+            sistemas de alta performance
+          </span>
+          .
         </p>
-        <div className="flex flex-wrap justify-center gap-2">
-          {tags.map((tag) => (
-            <div key={tag} className="bg-white/8 border border-white/10 px-[14px] py-1.5 rounded-full text-xs font-medium text-[#39FF14] dark:text-[#39FF14] data-[theme=light]:text-black">
+
+        {/* Tags de Tecnologias */}
+        <div
+          aria-label="Principais tecnologias"
+          className="flex flex-wrap justify-center gap-2 max-w-2xl mb-8"
+        >
+          {HERO_TAGS.map((tag) => (
+            <span
+              key={tag}
+              className="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-mono-code font-medium bg-[#0e141f]/80 light:bg-white/90 border border-[#39FF14]/25 light:border-emerald-600/30 text-[#39FF14] light:text-emerald-800 backdrop-blur-md shadow-xs"
+            >
               {tag}
-            </div>
+            </span>
           ))}
         </div>
+
+        {/* CTA Principal */}
+        <div className="flex items-center justify-center w-full sm:w-auto px-2 sm:px-0">
+          <a
+            href="#projects"
+            onClick={(e) => scrollToSection(e, '#projects')}
+            className="w-full sm:w-auto min-h-[48px] px-7 py-3 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center justify-center gap-2.5 bg-[#39FF14] light:bg-emerald-600 text-slate-950 light:text-white hover:brightness-110 transition-all duration-200 cursor-pointer shadow-lg shadow-[#39FF14]/20 light:shadow-emerald-600/25"
+          >
+            <span>Explorar Projetos</span>
+            <FaArrowRight className="text-sm" />
+          </a>
+        </div>
+      </div>
+
+      {/* Barra Inferior: Seletor de Modo 3D e Indicador de Scroll */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Seletor de Cena 3D */}
+        <div
+          role="group"
+          aria-label="Modo de renderização da cena interativa"
+          className="inline-flex items-center gap-1 p-1 rounded-xl bg-[#0b1018]/80 light:bg-white/90 border border-white/10 light:border-slate-300 backdrop-blur-md"
+        >
+          {VISUAL_MODES.map((mode) => {
+            const active = visualMode === mode.id;
+            return (
+              <button
+                key={mode.id}
+                type="button"
+                onClick={() => setVisualMode(mode.id)}
+                aria-pressed={active}
+                className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-mono-code font-medium transition-all duration-200 cursor-pointer ${
+                  active
+                    ? 'bg-[#39FF14] light:bg-emerald-600 text-slate-950 light:text-white font-semibold shadow-xs'
+                    : 'text-slate-300 light:text-slate-600 hover:text-white light:hover:text-slate-900'
+                }`}
+              >
+                {mode.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Botao Rolar para Sobre */}
+        <a
+          href="#about"
+          onClick={(e) => scrollToSection(e, '#about')}
+          aria-label="Rolar para a seção Sobre Mim"
+          className="inline-flex items-center gap-2 min-h-[44px] px-3 py-1.5 rounded-xl text-xs font-mono-code uppercase tracking-wider text-slate-400 light:text-slate-600 hover:text-[#39FF14] light:hover:text-emerald-700 transition-colors duration-200 cursor-pointer"
+        >
+          <span>Role para explorar</span>
+          <FaChevronDown className="animate-bounce text-[#39FF14] light:text-emerald-600" />
+        </a>
       </div>
     </section>
   );
-}
+};
+
+export default Hero;
