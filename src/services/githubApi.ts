@@ -18,8 +18,10 @@ export interface GitHubRepoDTO {
 }
 
 const GITHUB_USERNAME = 'caioeduardoml';
-const CACHE_KEY = 'github_repos_cache_v1';
-const CACHE_TTL_MS = 15 * 60 * 1000;
+const REQUIRED_TOPIC = 'portfolio';
+const CONTROL_TOPICS = new Set(['portfolio', 'destaque', 'featured']);
+const CACHE_KEY = 'github_repos_cache_v2';
+const CACHE_TTL_MS = 5 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 6000;
 
 const sanitizeHttpsUrl = (rawUrl: string | null | undefined): string | undefined => {
@@ -55,7 +57,11 @@ const inferCategories = (repo: GitHubRepoDTO): ProjectCategory[] => {
 
   if (isWeb) categories.push('web');
   if (isSystems) categories.push('sistemas');
-  if (repo.stargazers_count > 0 || topics.includes('featured')) {
+  if (
+    repo.stargazers_count > 0 ||
+    topics.includes('destaque') ||
+    topics.includes('featured')
+  ) {
     categories.push('destaques');
   }
 
@@ -108,6 +114,9 @@ export const mapGitHubReposToProjects = (
 ): ProjectItem[] => {
   return repos
     .filter((repo) => !repo.fork && !repo.archived)
+    .filter((repo) =>
+      (repo.topics ?? []).some((topic) => topic.toLowerCase() === REQUIRED_TOPIC)
+    )
     .filter((repo) => {
       const normalized = repo.html_url.replace(/\/+$/, '').toLowerCase();
       return !existingGithubUrls.has(normalized);
@@ -115,9 +124,12 @@ export const mapGitHubReposToProjects = (
     .map((repo) => {
       const githubUrl = sanitizeHttpsUrl(repo.html_url);
       const liveUrl = sanitizeHttpsUrl(repo.homepage);
+      const displayTopics = (repo.topics ?? [])
+        .filter((topic) => !CONTROL_TOPICS.has(topic.toLowerCase()))
+        .slice(0, 3);
       const techs = [
         ...(repo.language ? [repo.language] : []),
-        ...(repo.topics ?? []).slice(0, 3),
+        ...displayTopics,
       ];
 
       return {
