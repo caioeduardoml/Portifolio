@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   FaLaptopCode,
-  FaGamepad,
   FaMicrochip,
   FaGithub,
   FaExternalLinkAlt,
@@ -27,17 +26,6 @@ const PROJECTS_DATA: ProjectItem[] = [
     githubUrl: 'https://github.com/caioeduardoml',
     liveUrl: 'https://roboaputfpr.netlify.app',
     highlightBadge: 'Destaque Web',
-  },
-  {
-    id: 'projeto-pokedex',
-    title: 'Projeto Pokédex & Engine 2D',
-    subtitle: 'Jogo e Simulação Gráfica em C',
-    desc: 'Jogo desenvolvido em linguagem C utilizando a biblioteca gráfica Raylib, implementando mecânicas inspiradas em Pokémon, gerenciamento de estados e renderização em tempo real.',
-    categories: ['todos', 'destaques', 'sistemas'],
-    icon: <FaGamepad />,
-    techs: ['C', 'Raylib', 'Game Loop', 'Estruturas de Dados'],
-    githubUrl: 'https://github.com/caioeduardoml/ProjetoPokedexUTFPR',
-    highlightBadge: 'Gráficos & C',
   },
   {
     id: 'simulador-so',
