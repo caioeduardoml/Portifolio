@@ -8,7 +8,11 @@ import {
 } from 'react-icons/fa';
 import { FourPointStar, HandcraftedDivider } from '~components/HandcraftedOrnaments';
 import type { ProjectCategory, ProjectItem } from '~types/portfolio';
-import { fetchGitHubRepos, mapGitHubReposToProjects } from '@/services/githubApi';
+import {
+  fetchGitHubRepos,
+  mapGitHubReposToProjects,
+  type GitHubSyncStatus,
+} from '@/services/githubApi';
 
 const PROJECTS_DATA: ProjectItem[] = [
   {
@@ -182,13 +186,14 @@ export const Projects: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ProjectCategory>('todos');
   const [githubProjects, setGithubProjects] = useState<ProjectItem[]>([]);
   const [isSyncingGithub, setIsSyncingGithub] = useState<boolean>(true);
+  const [syncStatus, setSyncStatus] = useState<GitHubSyncStatus>('live');
 
   useEffect(() => {
     const controller = new AbortController();
 
     const loadGithubRepos = async (): Promise<void> => {
       try {
-        const repos = await fetchGitHubRepos(controller.signal);
+        const { repos, status } = await fetchGitHubRepos(controller.signal);
         const existingUrls = new Set(
           PROJECTS_DATA.map((p) => p.githubUrl?.replace(/\/+$/, '').toLowerCase()).filter(
             (url): url is string => Boolean(url)
@@ -197,9 +202,10 @@ export const Projects: React.FC = () => {
         const mapped = mapGitHubReposToProjects(repos, existingUrls);
         if (!controller.signal.aborted) {
           setGithubProjects(mapped);
+          setSyncStatus(status);
         }
       } catch {
-        // Mantem os projetos locais em caso de indisponibilidade ou limite da API
+        // Mantem os projetos locais em caso de abortamento
       } finally {
         if (!controller.signal.aborted) {
           setIsSyncingGithub(false);
@@ -290,7 +296,9 @@ export const Projects: React.FC = () => {
             <FaGithub className="text-[#111111] dark:text-[#FDFCFB]" />
             {isSyncingGithub
               ? 'Sincronizando repositórios públicos do GitHub...'
-              : `${githubProjects.length} repositórios sincronizados em tempo real via GitHub`}
+              : syncStatus === 'rate-limited'
+                ? `${githubProjects.length} repositórios exibidos (limite temporário da API do GitHub)`
+                : `${githubProjects.length} repositórios sincronizados via GitHub`}
           </span>
         </div>
 

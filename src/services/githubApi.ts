@@ -18,12 +18,38 @@ export interface GitHubRepoDTO {
   default_branch?: string;
 }
 
+export type GitHubSyncStatus = 'live' | 'cache' | 'rate-limited' | 'error';
+
+export interface GitHubFetchResult {
+  repos: GitHubRepoDTO[];
+  status: GitHubSyncStatus;
+}
+
 const GITHUB_USERNAME = 'caioeduardoml';
 const REQUIRED_TOPIC = 'portfolio';
 const CONTROL_TOPICS = new Set(['portfolio', 'destaque', 'featured']);
-const CACHE_KEY = 'github_repos_cache_v3';
-const CACHE_TTL_MS = 5 * 60 * 1000;
+const CACHE_KEY = 'github_repos_cache_v4';
+const CACHE_TTL_MS = 15 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 6000;
+
+// Fallback usado apenas se a API atingir o limite de requisicoes e nao houver cache local
+const FALLBACK_REPOS: GitHubRepoDTO[] = [
+  {
+    id: 1,
+    name: 'Gerador-QR-Code',
+    description:
+      'Gerador de QR Code moderno, rápido e seguro, construído com React, TypeScript, Vite e Tailwind CSS. Permite criar, personalizar e exportar QR Codes em alta definição com validação de contraste em tempo real.',
+    html_url: 'https://github.com/caioeduardoml/Gerador-QR-Code',
+    homepage: 'https://geradorqr-code.netlify.app',
+    language: 'TypeScript',
+    topics: ['portfolio', 'destaque'],
+    fork: false,
+    archived: false,
+    stargazers_count: 0,
+    updated_at: '2026-11-17T00:00:00Z',
+    default_branch: 'main',
+  },
+];
 
 const sanitizeHttpsUrl = (rawUrl: string | null | undefined): string | undefined => {
   if (!rawUrl || typeof rawUrl !== 'string') return undefined;
@@ -78,17 +104,21 @@ const pickRepoIcon = (language: string | null): ReactNode => {
   return createElement(FaGithub);
 };
 
-const readRepoCache = (): GitHubRepoDTO[] | null => {
+interface StoredRepoCache {
+  timestamp: number;
+  data: GitHubRepoDTO[];
+}
+
+const readRepoCache = (allowStale = false): GitHubRepoDTO[] | null => {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = window.sessionStorage.getItem(CACHE_KEY);
+    const raw = window.localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as { timestamp?: number; data?: GitHubRepoDTO[] };
-    if (
-      typeof parsed.timestamp === 'number' &&
-      Array.isArray(parsed.data) &&
-      Date.now() - parsed.timestamp < CACHE_TTL_MS
-    ) {
+    const parsed = JSON.parse(raw) as Partial<StoredRepoCache>;
+    if (typeof parsed.timestamp !== 'number' || !Array.isArray(parsed.data)) {
+      return null;
+    }
+    if (allowStale || Date.now() - parsed.timestamp < CACHE_TTL_MS) {
       return parsed.data;
     }
     return null;
@@ -100,12 +130,12 @@ const readRepoCache = (): GitHubRepoDTO[] | null => {
 const writeRepoCache = (data: GitHubRepoDTO[]): void => {
   if (typeof window === 'undefined') return;
   try {
-    window.sessionStorage.setItem(
+    window.localStorage.setItem(
       CACHE_KEY,
       JSON.stringify({ timestamp: Date.now(), data })
     );
   } catch {
-    // Ignora falhas de armazenamento caso sessionStorage esteja indisponivel
+    // Ignora falhas de armazenamento caso localStorage esteja indisponivel
   }
 };
 
@@ -158,9 +188,11 @@ export const mapGitHubReposToProjects = (
     });
 };
 
-export const fetchGitHubRepos = async (signal?: AbortSignal): Promise<GitHubRepoDTO[]> => {
-  const cached = readRepoCache();
-  if (cached) return cached;
+export const fetchGitHubRepos = async (signal?: AbortSignal): Promise<GitHubFetchResult> => {
+  const freshCache = readRepoCache(false);
+  if (freshCache) {
+    return { repos: freshCache, status: 'cache' };
+  }
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -177,13 +209,21 @@ export const fetchGitHubRepos = async (signal?: AbortSignal): Promise<GitHubRepo
       }
     );
 
+    if (response.status === 403 || response.status === 429) {
+      const staleCache = readRepoCache(true);
+      return {
+        repos: staleCache ?? FALLBACK_REPOS,
+        status: 'rate-limited',
+      };
+    }
+
     if (!response.ok) {
       throw new Error(`GitHub API retornou status ${response.status}`);
     }
 
     const data = (await response.json()) as unknown;
     if (!Array.isArray(data)) {
-      return [];
+      return { repos: [], status: 'live' };
     }
 
     const validRepos = data.filter(
@@ -196,7 +236,16 @@ export const fetchGitHubRepos = async (signal?: AbortSignal): Promise<GitHubRepo
     );
 
     writeRepoCache(validRepos);
-    return validRepos;
+    return { repos: validRepos, status: 'live' };
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError' && signal?.aborted) {
+      throw error;
+    }
+    const staleCache = readRepoCache(true);
+    return {
+      repos: staleCache ?? FALLBACK_REPOS,
+      status: staleCache ? 'cache' : 'error',
+    };
   } finally {
     clearTimeout(timeoutId);
     signal?.removeEventListener('abort', onExternalAbort);
