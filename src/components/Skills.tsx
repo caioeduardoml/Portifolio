@@ -11,6 +11,7 @@ import {
   FaSyncAlt,
 } from 'react-icons/fa';
 import { SiTypescript } from 'react-icons/si';
+import { FourPointStar, HandcraftedDivider } from '~components/HandcraftedOrnaments';
 import type { CubeFaceSkill, SkillGroup } from '~types/portfolio';
 
 const CUBE_SKILLS: CubeFaceSkill[] = [
@@ -21,8 +22,8 @@ const CUBE_SKILLS: CubeFaceSkill[] = [
     summary:
       'Construção de SPAs modulares com React 19, Hooks customizados, Suspense, animações fluidas e integração WebGL/Three.js.',
     details: ['Componentização limpa', 'React 19 & Hooks', 'Three.js / Motion', 'Tailwind CSS v4'],
-    colorClass: 'from-blue-600/90 to-cyan-600/90',
-    borderGlow: 'border-cyan-300/50',
+    colorClass: 'bg-[#FFFFFF] text-[#111111] dark:bg-[#1A1A1A] dark:text-[#FDFCFB]',
+    borderGlow: 'border-[#171717] dark:border-[#FDFCFB]',
     icon: <FaReact />,
   },
   {
@@ -32,8 +33,8 @@ const CUBE_SKILLS: CubeFaceSkill[] = [
     summary:
       'Desenvolvimento de scripts de automação, processamento de dados, integração de serviços e algoritmos computacionais.',
     details: ['Automação de tarefas', 'APIs & Scripts', 'Processamento de dados', 'Integração Linux'],
-    colorClass: 'from-emerald-600/90 to-teal-700/90',
-    borderGlow: 'border-emerald-300/50',
+    colorClass: 'bg-[#111111] text-[#FDFCFB] dark:bg-[#FDFCFB] dark:text-[#111111]',
+    borderGlow: 'border-[#171717] dark:border-[#FDFCFB]',
     icon: <FaPython />,
   },
   {
@@ -43,8 +44,8 @@ const CUBE_SKILLS: CubeFaceSkill[] = [
     summary:
       'Código seguro e escalável com tipagem estática rigorosa, interfaces bem definidas e prevenção de erros em tempo de compilação.',
     details: ['Strict Mode', 'Generics & Interfaces', 'Arquitetura escalável', 'Manutenibilidade'],
-    colorClass: 'from-sky-600/90 to-indigo-700/90',
-    borderGlow: 'border-sky-300/50',
+    colorClass: 'bg-[#F5F3F0] text-[#111111] dark:bg-[#222222] dark:text-[#FDFCFB]',
+    borderGlow: 'border-[#171717] dark:border-[#FDFCFB]',
     icon: <SiTypescript />,
   },
   {
@@ -54,8 +55,8 @@ const CUBE_SKILLS: CubeFaceSkill[] = [
     summary:
       'Desenvolvimento de aplicações robustas e estruturadas utilizando o ecossistema .NET e orientação a objetos.',
     details: ['POO Avançada', 'C# / .NET', 'Arquitetura em camadas', 'APIs & Serviços'],
-    colorClass: 'from-purple-600/90 to-violet-800/90',
-    borderGlow: 'border-purple-300/50',
+    colorClass: 'bg-[#111111] text-[#FDFCFB] dark:bg-[#FDFCFB] dark:text-[#111111]',
+    borderGlow: 'border-[#171717] dark:border-[#FDFCFB]',
     icon: <FaTerminal />,
   },
   {
@@ -65,8 +66,8 @@ const CUBE_SKILLS: CubeFaceSkill[] = [
     summary:
       'Aplicações nativas compiladas para Android e iOS com interfaces responsivas, animações a 60fps e gerenciamento de estado.',
     details: ['UI Responsiva', 'Dart', 'Integração REST', 'Multiplataforma'],
-    colorClass: 'from-indigo-500/90 to-blue-700/90',
-    borderGlow: 'border-indigo-300/50',
+    colorClass: 'bg-[#FFFFFF] text-[#111111] dark:bg-[#1A1A1A] dark:text-[#FDFCFB]',
+    borderGlow: 'border-[#171717] dark:border-[#FDFCFB]',
     icon: <FaMobileAlt />,
   },
   {
@@ -76,8 +77,8 @@ const CUBE_SKILLS: CubeFaceSkill[] = [
     summary:
       'Programação de baixo nível, gerenciamento de memória, simuladores de Sistemas Operacionais (Qt) e jogos 2D/3D com Raylib.',
     details: ['Sistemas Operacionais', 'Ponteiros & Memória', 'Raylib & QtCreator', 'Estruturas de Dados'],
-    colorClass: 'from-amber-500/90 to-orange-600/90',
-    borderGlow: 'border-amber-300/50',
+    colorClass: 'bg-[#F5F3F0] text-[#111111] dark:bg-[#222222] dark:text-[#FDFCFB]',
+    borderGlow: 'border-[#171717] dark:border-[#FDFCFB]',
     icon: <FaMicrochip />,
   },
 ];
@@ -302,22 +303,24 @@ export const Skills: React.FC = () => {
       id="skills"
       ref={sectionRef}
       aria-labelledby="skills-heading"
-      className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 bg-[var(--bg-primary)] transition-colors duration-300 overflow-hidden"
+      className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 bg-[var(--bg-primary)] border-b border-[#D8D5D1] dark:border-[#333333] transition-colors duration-300 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Cabecalho */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-          <span className="inline-block text-xs font-mono-code uppercase tracking-widest text-[#39FF14] light:text-emerald-700 font-semibold mb-2">
-            02 // Stack &amp; Experiência 3D
+          <span className="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-widest text-[#555555] dark:text-[#D8D5D1] font-medium mb-2">
+            <FourPointStar className="w-3 h-3 text-[#111111] dark:text-[#FDFCFB]" />
+            <span>02 // Stack &amp; Experiência 3D</span>
+            <FourPointStar className="w-3 h-3 text-[#111111] dark:text-[#FDFCFB]" />
           </span>
           <h2
             id="skills-heading"
-            className="text-3xl sm:text-4xl font-bold text-white light:text-slate-900 font-display tracking-tight"
+            className="text-3xl sm:text-4xl font-bold text-[#111111] dark:text-[#FDFCFB] font-display tracking-tight"
           >
             Minhas Habilidades
           </h2>
-          <div className="w-14 h-1 bg-[#39FF14] light:bg-emerald-600 mx-auto mt-3 rounded-full" />
-          <p className="text-slate-300 light:text-slate-600 text-sm sm:text-base mt-4">
+          <HandcraftedDivider />
+          <p className="text-[#555555] dark:text-[#D8D5D1] text-sm sm:text-base mt-4">
             Interaja com o cubo 3D abaixo (arraste para girar ou clique para planificar) ou selecione
             uma tecnologia para inspecionar.
           </p>
@@ -326,18 +329,18 @@ export const Skills: React.FC = () => {
         {/* Showcase 3D + Inspetor de Tecnologia */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-16">
           {/* Palco do Cubo 3D */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center rounded-2xl bg-[#0e141f]/90 light:bg-white border border-white/8 light:border-slate-200 p-4 sm:p-6 shadow-xl relative overflow-hidden">
+          <div className="lg:col-span-7 flex flex-col items-center justify-center rounded-2xl bg-[#FFFFFF] dark:bg-[#1A1A1A] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] p-4 sm:p-6 relative overflow-hidden">
             {/* Barra de Controles Acessiveis do Cubo */}
-            <div className="w-full flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/8 light:border-slate-100 z-20">
-              <div className="flex items-center gap-2 text-xs font-mono-code text-slate-300 light:text-slate-600">
-                <FaCube className="text-[#39FF14] light:text-emerald-600" />
+            <div className="w-full flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#D8D5D1] dark:border-[#333333] z-20">
+              <div className="flex items-center gap-2 text-xs font-mono-code text-[#555555] dark:text-[#D8D5D1]">
+                <FaCube className="text-[#111111] dark:text-[#FDFCFB]" />
                 <span>{isUnfolded ? 'Modo: Planificado (2D/3D)' : 'Modo: Cubo 3D Interativo'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setIsUnfolded((prev) => !prev)}
-                  className="inline-flex items-center gap-2 min-h-[40px] px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#39FF14]/15 light:bg-emerald-600/12 text-[#39FF14] light:text-emerald-700 border border-[#39FF14]/35 light:border-emerald-600/35 hover:bg-[#39FF14]/25 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 min-h-[40px] px-4 py-1.5 rounded-full text-xs font-semibold bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] hover:bg-[#FFFFFF] hover:text-[#111111] dark:hover:bg-[#111111] dark:hover:text-[#FDFCFB] transition-colors cursor-pointer"
                 >
                   {isUnfolded ? <FaCompressArrowsAlt /> : <FaExpandArrowsAlt />}
                   <span>{isUnfolded ? 'Montar Cubo' : 'Abrir Cubo'}</span>
@@ -347,7 +350,7 @@ export const Skills: React.FC = () => {
                   onClick={handleResetRotation}
                   aria-label="Resetar rotação do cubo"
                   title="Resetar rotação"
-                  className="inline-flex items-center justify-center min-w-[40px] min-h-[40px] rounded-xl text-xs bg-white/5 light:bg-slate-100 text-slate-300 light:text-slate-700 border border-white/10 light:border-slate-200 hover:text-white light:hover:text-slate-900 transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center min-w-[40px] min-h-[40px] rounded-full text-xs bg-[#FFFFFF] dark:bg-[#111111] text-[#111111] dark:text-[#FDFCFB] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] hover:bg-[#111111] hover:text-[#FDFCFB] dark:hover:bg-[#FDFCFB] dark:hover:text-[#111111] transition-colors cursor-pointer"
                 >
                   <FaSyncAlt />
                 </button>
@@ -405,13 +408,14 @@ export const Skills: React.FC = () => {
                           height: `${cubeSize}px`,
                           transform: faceTransforms[index],
                         }}
-                        className={`face3d absolute rounded-xl border-2 bg-gradient-to-br ${face.colorClass} ${
-                          isSelected ? 'border-[#39FF14] ring-2 ring-[#39FF14]/50' : face.borderGlow
-                        } flex flex-col items-center justify-center text-white shadow-[inset_0_0_24px_rgba(0,0,0,0.55)] backdrop-blur-md transition-all duration-500 ${
+                        className={`face3d absolute rounded-xl border-[1.5px] ${face.colorClass} ${
+                          isSelected ? 'ring-2 ring-[#111111] dark:ring-[#FDFCFB] ring-offset-2' : ''
+                        } ${face.borderGlow} flex flex-col items-center justify-center transition-all duration-500 ${
                           isUnfolded ? 'cursor-pointer pointer-events-auto' : 'pointer-events-none'
                         }`}
                       >
-                        <div className="text-2xl sm:text-3xl md:text-4xl mb-1.5 drop-shadow">
+                        <FourPointStar className="w-2.5 h-2.5 absolute top-2 right-2 opacity-40" />
+                        <div className="text-2xl sm:text-3xl md:text-4xl mb-1.5">
                           {face.icon}
                         </div>
                         <span className="font-display font-bold text-xs sm:text-sm tracking-wide">
@@ -424,14 +428,14 @@ export const Skills: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-center text-slate-400 light:text-slate-600 text-xs sm:text-sm mt-1">
+            <p className="text-center text-[#555555] dark:text-[#D8D5D1] text-xs sm:text-sm mt-1">
               {isUnfolded ? (
                 <>
                   Cubo planificado! Toque em uma face para inspecionar ou em{' '}
                   <button
                     type="button"
                     onClick={() => setIsUnfolded(false)}
-                    className="text-[#39FF14] light:text-emerald-700 font-bold underline cursor-pointer"
+                    className="text-[#111111] dark:text-[#FDFCFB] font-bold underline underline-offset-4 cursor-pointer"
                   >
                     Montar Cubo
                   </button>
@@ -443,7 +447,7 @@ export const Skills: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsUnfolded(true)}
-                    className="text-[#39FF14] light:text-emerald-700 font-bold underline cursor-pointer"
+                    className="text-[#111111] dark:text-[#FDFCFB] font-bold underline underline-offset-4 cursor-pointer"
                   >
                     Clique Rápido
                   </button>{' '}
@@ -470,10 +474,10 @@ export const Skills: React.FC = () => {
                     role="tab"
                     aria-selected={active}
                     onClick={() => setSelectedSkillId(skill.id)}
-                    className={`min-h-[44px] px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 border transition-all duration-200 cursor-pointer ${
+                    className={`min-h-[44px] px-3 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-2 border-[1.5px] transition-colors duration-200 cursor-pointer ${
                       active
-                        ? 'bg-[#39FF14]/15 light:bg-emerald-600/15 border-[#39FF14] light:border-emerald-600 text-[#39FF14] light:text-emerald-800 shadow-sm'
-                        : 'bg-[#111722]/80 light:bg-white border-white/8 light:border-slate-200 text-slate-300 light:text-slate-700 hover:border-white/25 light:hover:border-slate-300'
+                        ? 'bg-[#111111] dark:bg-[#FDFCFB] border-[#171717] dark:border-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111]'
+                        : 'bg-[#FFFFFF] dark:bg-[#1A1A1A] border-[#171717] dark:border-[#FDFCFB] text-[#111111] dark:text-[#FDFCFB] hover:bg-[#111111] hover:text-[#FDFCFB] dark:hover:bg-[#FDFCFB] dark:hover:text-[#111111]'
                     }`}
                   >
                     <span className="text-base">{skill.icon}</span>
@@ -484,36 +488,36 @@ export const Skills: React.FC = () => {
             </div>
 
             {/* Card Detalhado da Tecnologia */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-[#111722]/90 light:bg-white border border-white/10 light:border-slate-200 shadow-xl flex flex-col justify-between">
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#FFFFFF] dark:bg-[#1A1A1A] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <span className="px-3 py-1 rounded-full text-xs font-mono-code font-medium bg-[#39FF14]/12 light:bg-emerald-600/12 text-[#39FF14] light:text-emerald-700 border border-[#39FF14]/30 light:border-emerald-600/30">
+                <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-[#D8D5D1] dark:border-[#333333]">
+                  <span className="px-3.5 py-1 rounded-full text-xs font-mono-code font-medium bg-[#F5F3F0] dark:bg-[#222222] text-[#111111] dark:text-[#FDFCFB] border border-[#171717] dark:border-[#FDFCFB]">
                     {selectedSkill.category}
                   </span>
-                  <div className="text-2xl text-[#39FF14] light:text-emerald-600">
+                  <div className="text-2xl text-[#111111] dark:text-[#FDFCFB]">
                     {selectedSkill.icon}
                   </div>
                 </div>
 
-                <h3 className="text-2xl font-bold text-white light:text-slate-900 font-display mb-2">
+                <h3 className="text-2xl font-bold text-[#111111] dark:text-[#FDFCFB] font-display mb-2">
                   {selectedSkill.label}
                 </h3>
-                <p className="text-slate-300 light:text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                <p className="text-[#555555] dark:text-[#D8D5D1] text-sm sm:text-base leading-relaxed mb-6">
                   {selectedSkill.summary}
                 </p>
               </div>
 
               <div>
-                <h4 className="text-xs font-mono-code uppercase tracking-wider text-slate-400 light:text-slate-500 mb-3">
+                <h4 className="text-xs font-mono-code uppercase tracking-wider text-[#555555] dark:text-[#A5A19C] mb-3">
                   Competências Aplicadas
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {selectedSkill.details.map((item) => (
                     <div
                       key={item}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/4 light:bg-slate-50 border border-white/6 light:border-slate-200 text-xs sm:text-sm text-slate-200 light:text-slate-700 font-medium"
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#FDFCFB] dark:bg-[#111111] border border-[#D8D5D1] dark:border-[#333333] text-xs sm:text-sm text-[#111111] dark:text-[#FDFCFB] font-medium"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#39FF14] light:bg-emerald-600 shrink-0" />
+                      <FourPointStar className="w-2.5 h-2.5 text-[#111111] dark:text-[#FDFCFB] shrink-0" />
                       <span>{item}</span>
                     </div>
                   ))}
@@ -528,25 +532,27 @@ export const Skills: React.FC = () => {
           {SKILL_GROUPS.map((group) => (
             <div
               key={group.id}
-              className="p-6 rounded-2xl bg-[#111722]/85 light:bg-white border border-white/8 light:border-slate-200 hover:border-[#39FF14]/35 light:hover:border-emerald-600/40 transition-all duration-300 flex flex-col justify-between shadow-md"
+              className="p-6 rounded-2xl bg-[#FFFFFF] dark:bg-[#1A1A1A] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] flex flex-col justify-between"
             >
               <div>
-                <h3 className="text-base sm:text-lg font-bold text-white light:text-slate-900 font-display mb-1">
+                <h3 className="text-base sm:text-lg font-bold text-[#111111] dark:text-[#FDFCFB] font-display mb-1">
                   {group.title}
                 </h3>
-                <p className="text-xs text-slate-400 light:text-slate-500 mb-5">{group.subtitle}</p>
+                <p className="text-xs text-[#555555] dark:text-[#A5A19C] mb-5 pb-3 border-b border-[#D8D5D1] dark:border-[#333333]">
+                  {group.subtitle}
+                </p>
               </div>
 
               <ul className="space-y-2.5 list-none m-0 p-0">
                 {group.items.map((skill) => (
                   <li
                     key={skill.name}
-                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-white/4 light:bg-slate-50 border border-white/6 light:border-slate-200/80"
+                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-[#FDFCFB] dark:bg-[#111111] border border-[#D8D5D1] dark:border-[#333333]"
                   >
-                    <span className="text-sm font-medium text-slate-200 light:text-slate-800">
+                    <span className="text-sm font-medium text-[#111111] dark:text-[#FDFCFB]">
                       {skill.name}
                     </span>
-                    <span className="text-[11px] font-mono-code px-2 py-0.5 rounded-md bg-[#39FF14]/10 light:bg-emerald-600/10 text-[#39FF14] light:text-emerald-700 font-medium">
+                    <span className="text-[11px] font-mono-code px-2.5 py-0.5 rounded-full bg-[#F5F3F0] dark:bg-[#222222] text-[#111111] dark:text-[#FDFCFB] border border-[#171717] dark:border-[#FDFCFB] font-medium">
                       {skill.tag}
                     </span>
                   </li>

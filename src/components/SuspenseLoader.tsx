@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import { Suspense } from 'react';
+import { FourPointStar } from '~components/HandcraftedOrnaments';
 
 interface SuspenseLoaderProps {
   children: ReactNode;
@@ -19,13 +20,10 @@ const SectionSkeleton: React.FC<{ minHeightClass: string; label: string }> = ({
       aria-label={label}
       className={`w-full ${minHeightClass} flex flex-col items-center justify-center px-6 py-20 bg-[var(--bg-primary)]`}
     >
-      <div className="relative w-12 h-12 mb-4">
-        <div className="absolute inset-0 rounded-xl border-2 border-[#39FF14]/30 light:border-emerald-600/30 animate-ping" />
-        <div className="relative w-12 h-12 rounded-xl border-2 border-[#39FF14] light:border-emerald-600 flex items-center justify-center bg-white/5">
-          <div className="w-3 h-3 rounded-xs bg-[#39FF14] light:bg-emerald-600 animate-pulse" />
-        </div>
+      <div className="relative w-12 h-12 mb-4 rounded-xl border-[1.5px] border-[#171717] dark:border-[#FDFCFB] flex items-center justify-center bg-[#FFFFFF] dark:bg-[#1A1A1A]">
+        <FourPointStar className="w-5 h-5 text-[#111111] dark:text-[#FDFCFB] animate-pulse" />
       </div>
-      <span className="text-xs font-mono-code tracking-widest uppercase text-slate-400 light:text-slate-600">
+      <span className="text-xs font-mono-code tracking-widest uppercase text-[#555555] dark:text-[#D8D5D1]">
         {label}
       </span>
     </div>

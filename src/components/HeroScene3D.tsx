@@ -70,7 +70,7 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     return () => observer.disconnect();
   }, []);
 
-  // Cena 3D WebGL com Three.js
+  // Cena 3D WebGL Monocromatica com Three.js
   useEffect(() => {
     if (!webGLSupported || visualMode === 'synapse') return;
     const canvas = webglCanvasRef.current;
@@ -106,9 +106,10 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     const rootGroup = new Group();
     scene.add(rootGroup);
 
-    const primaryColor = isLight ? 0x15803d : 0x39ff14;
-    const secondaryColor = isLight ? 0x0f766e : 0x10b981;
-    const particleColor = isLight ? 0x0f172a : 0x86efac;
+    // Paleta estritamente monocromatica (tinta preta sobre papel ou papel branco sobre tinta)
+    const primaryColor = isLight ? 0x171717 : 0xfdfcfb;
+    const secondaryColor = isLight ? 0x555555 : 0xd8d5d1;
+    const particleColor = isLight ? 0x171717 : 0xa5a19c;
 
     // Nucleo Icosaedrico Externo em Wireframe
     const outerGeo = new IcosahedronGeometry(isMobile ? 1.65 : 2.05, 1);
@@ -116,7 +117,7 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     const outerLineMat = new LineBasicMaterial({
       color: primaryColor,
       transparent: true,
-      opacity: isLight ? 0.38 : 0.42,
+      opacity: isLight ? 0.22 : 0.28,
     });
     const outerWireframe = new LineSegments(outerEdges, outerLineMat);
     rootGroup.add(outerWireframe);
@@ -126,39 +127,39 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     const innerMat = new MeshStandardMaterial({
       color: secondaryColor,
       emissive: primaryColor,
-      emissiveIntensity: isLight ? 0.15 : 0.35,
-      metalness: 0.7,
-      roughness: 0.25,
+      emissiveIntensity: 0.05,
+      metalness: 0.3,
+      roughness: 0.7,
       wireframe: true,
       transparent: true,
-      opacity: isLight ? 0.45 : 0.55,
+      opacity: isLight ? 0.26 : 0.32,
     });
     const innerMesh = new Mesh(innerGeo, innerMat);
     rootGroup.add(innerMesh);
 
-    // Aneis Orbitais 3D
-    const ring1Geo = new TorusGeometry(isMobile ? 2.25 : 2.75, 0.014, 12, 90);
+    // Aneis Orbitais 3D Geometricos
+    const ring1Geo = new TorusGeometry(isMobile ? 2.25 : 2.75, 0.012, 12, 90);
     const ring1Mat = new MeshBasicMaterial({
       color: primaryColor,
       transparent: true,
-      opacity: isLight ? 0.32 : 0.3,
+      opacity: isLight ? 0.18 : 0.22,
     });
     const ring1Mesh = new Mesh(ring1Geo, ring1Mat);
     ring1Mesh.rotation.set(Math.PI / 2.6, 0.3, 0);
     rootGroup.add(ring1Mesh);
 
-    const ring2Geo = new TorusGeometry(isMobile ? 2.6 : 3.2, 0.01, 12, 90);
+    const ring2Geo = new TorusGeometry(isMobile ? 2.6 : 3.2, 0.009, 12, 90);
     const ring2Mat = new MeshBasicMaterial({
       color: secondaryColor,
       transparent: true,
-      opacity: isLight ? 0.22 : 0.2,
+      opacity: isLight ? 0.15 : 0.18,
     });
     const ring2Mesh = new Mesh(ring2Geo, ring2Mat);
     ring2Mesh.rotation.set(-Math.PI / 3.2, -0.5, 0.4);
     rootGroup.add(ring2Mesh);
 
-    // Campo de Particulas 3D
-    const particleCount = isMobile ? 160 : 340;
+    // Campo de Particulas 3D Discretas
+    const particleCount = isMobile ? 120 : 240;
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
@@ -170,19 +171,18 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     particlesGeo.setAttribute('position', new Float32BufferAttribute(positions, 3));
     const particlesMat = new PointsMaterial({
       color: particleColor,
-      size: isMobile ? 0.045 : 0.038,
+      size: isMobile ? 0.042 : 0.036,
       transparent: true,
-      opacity: isLight ? 0.35 : 0.55,
+      opacity: isLight ? 0.32 : 0.38,
       sizeAttenuation: true,
     });
     const particles = new Points(particlesGeo, particlesMat);
     scene.add(particles);
 
-    // Iluminacao otimizada
-    const ambientLight = new AmbientLight(0xffffff, isLight ? 0.9 : 0.6);
+    const ambientLight = new AmbientLight(0xffffff, 0.85);
     scene.add(ambientLight);
 
-    const pointLight = new PointLight(primaryColor, isLight ? 1.2 : 2.2, 25);
+    const pointLight = new PointLight(0xffffff, 1.0, 25);
     pointLight.position.set(4, 4, 5);
     scene.add(pointLight);
 
@@ -296,7 +296,7 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     };
   }, [webGLSupported, visualMode, isLight]);
 
-  // Camada Interativa de Tentaculos / Sinapses 2D
+  // Camada Interativa de Sinapses em Tinta Monocromatica
   useEffect(() => {
     if (visualMode === '3d') return;
     const canvas = synapseCanvasRef.current;
@@ -422,45 +422,43 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
 
       show(context: CanvasRenderingContext2D, currTarget: Point2D): void {
         if (dist(this.x, this.y, currTarget.x, currTarget.y) <= this.l) {
-          context.globalCompositeOperation = isLight ? 'source-over' : 'lighter';
+          context.globalCompositeOperation = 'source-over';
           context.beginPath();
           context.moveTo(this.x, this.y);
           for (let i = 0; i < this.n; i++) {
             this.segments[i]?.show(context);
           }
-          const lightness = isLight ? this.rand * 20 + 28 : this.rand * 30 + 45;
-          context.strokeStyle = `hsl(135, 90%, ${lightness}%)`;
-          context.lineWidth = this.rand * 1.8 + 0.8;
+          const alpha = (0.14 + this.rand * 0.24).toFixed(2);
+          context.strokeStyle = isLight
+            ? `rgba(17, 17, 17, ${alpha})`
+            : `rgba(253, 252, 251, ${alpha})`;
+          context.lineWidth = this.rand * 1.2 + 0.6;
           context.lineCap = 'round';
           context.lineJoin = 'round';
-          context.shadowBlur = isLight ? 2 : 8;
-          context.shadowColor = isLight ? '#16a34a' : '#39FF14';
           context.stroke();
-          context.shadowBlur = 0;
-          context.globalCompositeOperation = 'source-over';
         }
       }
 
       showNodes(context: CanvasRenderingContext2D, currTarget: Point2D): void {
         context.beginPath();
         if (dist(this.x, this.y, currTarget.x, currTarget.y) <= this.l) {
-          context.arc(this.x, this.y, 2 * this.rand + 1, 0, 2 * Math.PI);
-          context.fillStyle = isLight ? 'rgba(21, 128, 61, 0.85)' : 'rgba(255, 255, 255, 0.9)';
+          context.arc(this.x, this.y, 1.8 * this.rand + 1, 0, 2 * Math.PI);
+          context.fillStyle = isLight ? 'rgba(17, 17, 17, 0.65)' : 'rgba(253, 252, 251, 0.72)';
         } else {
-          context.arc(this.x, this.y, this.rand * 1.8, 0, 2 * Math.PI);
-          context.fillStyle = isLight ? 'rgba(15, 23, 42, 0.2)' : 'rgba(255, 255, 255, 0.28)';
+          context.arc(this.x, this.y, this.rand * 1.5, 0, 2 * Math.PI);
+          context.fillStyle = isLight ? 'rgba(85, 85, 85, 0.24)' : 'rgba(165, 161, 156, 0.25)';
         }
         context.fill();
       }
     }
 
-    const maxl = 260;
+    const maxl = 240;
     const minl = 50;
-    const numSegments = 24;
+    const numSegments = 22;
     let tentacles: Tentacle[] = [];
 
     const buildTentacles = (width: number, height: number): void => {
-      const count = width < 640 ? 24 : width < 1024 ? 38 : 54;
+      const count = width < 640 ? 20 : width < 1024 ? 34 : 46;
       tentacles = [];
       for (let i = 0; i < count; i++) {
         tentacles.push(
@@ -501,11 +499,11 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
       ctx.arc(
         target.x,
         target.y,
-        Math.min(12, dist(lastTarget.x, lastTarget.y, target.x, target.y) + 2.5),
+        Math.min(8, dist(lastTarget.x, lastTarget.y, target.x, target.y) + 2),
         0,
         2 * Math.PI
       );
-      ctx.fillStyle = isLight ? 'rgba(22, 163, 74, 0.65)' : 'hsl(120, 100%, 40%)';
+      ctx.fillStyle = isLight ? 'rgba(17, 17, 17, 0.45)' : 'rgba(253, 252, 251, 0.5)';
       ctx.fill();
 
       for (let i = 0; i < tentacles.length; i++) {
@@ -574,27 +572,21 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
 
   return (
     <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Brilho ambiental de fundo (tambem funciona como fallback visual se WebGL estiver indisponivel) */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(57,255,20,0.11),transparent_62%)] light:bg-[radial-gradient(circle_at_50%_42%,rgba(22,163,74,0.12),transparent_62%)]"
-      />
-
       {/* Camada WebGL 3D (Three.js) */}
       {webGLSupported && visualMode !== 'synapse' && (
         <canvas
           ref={webglCanvasRef}
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full z-10 opacity-90 transition-opacity duration-500"
+          className="absolute inset-0 w-full h-full z-10 opacity-85 transition-opacity duration-500"
         />
       )}
 
-      {/* Camada Interativa de Sinapses / Tentaculos */}
+      {/* Camada Interativa de Sinapses */}
       {visualMode !== '3d' && (
         <canvas
           ref={synapseCanvasRef}
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full z-10 opacity-85 transition-opacity duration-500"
+          className="absolute inset-0 w-full h-full z-10 opacity-80 transition-opacity duration-500"
         />
       )}
     </div>

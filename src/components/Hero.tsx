@@ -2,6 +2,7 @@ import React, { useState, useCallback, lazy } from 'react';
 import { FaArrowRight, FaChevronDown } from 'react-icons/fa';
 import DecryptedText from '~components/DecryptedText';
 import SuspenseLoader from '~components/SuspenseLoader';
+import { FourPointStar, HandcraftedSparkle } from '~components/HandcraftedOrnaments';
 import type { HeroVisualMode } from '~types/portfolio';
 
 const HeroScene3D = lazy(() => import('~components/HeroScene3D'));
@@ -47,7 +48,7 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
     <section
       id="home"
       aria-labelledby="hero-heading"
-      className="relative min-h-dvh w-full flex flex-col justify-between items-center pt-28 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-10 overflow-hidden bg-[var(--bg-primary)] transition-colors duration-300"
+      className="relative min-h-dvh w-full flex flex-col justify-between items-center pt-28 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-10 overflow-hidden bg-[var(--bg-primary)] border-b border-[#D8D5D1] dark:border-[#333333] transition-colors duration-300"
     >
       {/* Cena 3D Interativa em Background */}
       <SuspenseLoader minHeightClass="min-h-0" label="Inicializando motor 3D...">
@@ -60,39 +61,43 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
       {/* Conteudo Principal */}
       <div className="relative z-20 w-full max-w-4xl mx-auto text-center flex flex-col items-center my-auto">
         {/* Badge de Especialidade */}
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/6 light:bg-white/90 border border-white/12 light:border-slate-300/90 backdrop-blur-md mb-6 shadow-sm">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#39FF14] light:bg-emerald-500 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#39FF14] light:bg-emerald-600" />
-          </span>
-          <span className="text-xs sm:text-sm font-medium text-slate-200 light:text-slate-700 tracking-wide">
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#FFFFFF] dark:bg-[#1A1A1A] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] mb-6">
+          <FourPointStar className="w-3.5 h-3.5 text-[#111111] dark:text-[#FDFCFB]" />
+          <span className="text-xs sm:text-sm font-mono-code font-medium text-[#111111] dark:text-[#FDFCFB] tracking-wide uppercase">
             Engenheiro da Computação
           </span>
+          <HandcraftedSparkle className="w-3.5 h-3.5 text-[#555555] dark:text-[#D8D5D1]" />
         </div>
 
         {/* Titulo com Efeito de Decriptacao */}
         <h1
           id="hero-heading"
-          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.12] mb-5 text-white light:text-slate-900 font-display"
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.12] mb-5 text-[#111111] dark:text-[#FDFCFB] font-display"
         >
           <DecryptedText
             text="Olá, eu sou Caio Eduardo"
             speed={90}
             maxIterations={22}
             characters="ABCD0123456789<>/#"
-            className="text-white light:text-slate-900"
+            className="text-[#111111] dark:text-[#FDFCFB]"
             parentClassName="inline-block"
-            encryptedClassName="text-[#39FF14] light:text-emerald-600"
+            encryptedClassName="text-[#555555] dark:text-[#A5A19C]"
             animateOn="view"
           />
         </h1>
 
         {/* Subtitulo */}
-        <p className="text-base sm:text-lg md:text-xl text-slate-300 light:text-slate-600 max-w-2xl mx-auto leading-relaxed mb-7 px-1">
+        <p className="text-base sm:text-lg md:text-xl text-[#555555] dark:text-[#D8D5D1] max-w-2xl mx-auto leading-relaxed mb-7 px-1">
           Construindo experiências digitais modernas, eficientes e interativas através de aplicações{' '}
-          <span className="text-white light:text-slate-900 font-semibold">web</span>,{' '}
-          <span className="text-white light:text-slate-900 font-semibold">mobile</span> e{' '}
-          <span className="text-[#39FF14] light:text-emerald-700 font-semibold">
+          <span className="text-[#111111] dark:text-[#FDFCFB] font-semibold underline decoration-[#D8D5D1] dark:decoration-[#555555] underline-offset-4">
+            web
+          </span>
+          ,{' '}
+          <span className="text-[#111111] dark:text-[#FDFCFB] font-semibold underline decoration-[#D8D5D1] dark:decoration-[#555555] underline-offset-4">
+            mobile
+          </span>{' '}
+          e{' '}
+          <span className="text-[#111111] dark:text-[#FDFCFB] font-semibold underline decoration-[#171717] dark:decoration-[#FDFCFB] underline-offset-4">
             sistemas de alta performance
           </span>
           .
@@ -106,7 +111,7 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
           {HERO_TAGS.map((tag) => (
             <span
               key={tag}
-              className="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-mono-code font-medium bg-[#0e141f]/80 light:bg-white/90 border border-[#39FF14]/25 light:border-emerald-600/30 text-[#39FF14] light:text-emerald-800 backdrop-blur-md shadow-xs"
+              className="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-mono-code font-medium bg-[#FFFFFF] dark:bg-[#1A1A1A] border border-[#171717] dark:border-[#FDFCFB] text-[#111111] dark:text-[#FDFCFB]"
             >
               {tag}
             </span>
@@ -118,7 +123,7 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
           <a
             href="#projects"
             onClick={(e) => scrollToSection(e, '#projects')}
-            className="w-full sm:w-auto min-h-[48px] px-7 py-3 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center justify-center gap-2.5 bg-[#39FF14] light:bg-emerald-600 text-slate-950 light:text-white hover:brightness-110 transition-all duration-200 cursor-pointer shadow-lg shadow-[#39FF14]/20 light:shadow-emerald-600/25"
+            className="w-full sm:w-auto min-h-[48px] px-8 py-3 rounded-full font-semibold text-sm sm:text-base inline-flex items-center justify-center gap-2.5 bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] hover:bg-[#FFFFFF] hover:text-[#111111] dark:hover:bg-[#111111] dark:hover:text-[#FDFCFB] transition-colors duration-200 cursor-pointer"
           >
             <span>Explorar Projetos</span>
             <FaArrowRight className="text-sm" />
@@ -132,7 +137,7 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
         <div
           role="group"
           aria-label="Modo de renderização da cena interativa"
-          className="inline-flex items-center gap-1 p-1 rounded-xl bg-[#0b1018]/80 light:bg-white/90 border border-white/10 light:border-slate-300 backdrop-blur-md"
+          className="inline-flex items-center gap-1 p-1 rounded-full bg-[#FFFFFF] dark:bg-[#1A1A1A] border-[1.5px] border-[#171717] dark:border-[#FDFCFB]"
         >
           {VISUAL_MODES.map((mode) => {
             const active = visualMode === mode.id;
@@ -142,10 +147,10 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
                 type="button"
                 onClick={() => setVisualMode(mode.id)}
                 aria-pressed={active}
-                className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-mono-code font-medium transition-all duration-200 cursor-pointer ${
+                className={`min-h-[36px] px-3.5 py-1 rounded-full text-xs font-mono-code font-medium transition-colors duration-200 cursor-pointer ${
                   active
-                    ? 'bg-[#39FF14] light:bg-emerald-600 text-slate-950 light:text-white font-semibold shadow-xs'
-                    : 'text-slate-300 light:text-slate-600 hover:text-white light:hover:text-slate-900'
+                    ? 'bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] font-semibold'
+                    : 'text-[#555555] dark:text-[#D8D5D1] hover:text-[#111111] dark:hover:text-[#FDFCFB]'
                 }`}
               >
                 {mode.label}
@@ -159,10 +164,10 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
           href="#about"
           onClick={(e) => scrollToSection(e, '#about')}
           aria-label="Rolar para a seção Sobre Mim"
-          className="inline-flex items-center gap-2 min-h-[44px] px-3 py-1.5 rounded-xl text-xs font-mono-code uppercase tracking-wider text-slate-400 light:text-slate-600 hover:text-[#39FF14] light:hover:text-emerald-700 transition-colors duration-200 cursor-pointer"
+          className="inline-flex items-center gap-2 min-h-[44px] px-4 py-1.5 rounded-full text-xs font-mono-code uppercase tracking-wider text-[#555555] dark:text-[#D8D5D1] hover:text-[#111111] dark:hover:text-[#FDFCFB] border border-transparent hover:border-[#171717] dark:hover:border-[#FDFCFB] transition-colors duration-200 cursor-pointer"
         >
           <span>Role para explorar</span>
-          <FaChevronDown className="animate-bounce text-[#39FF14] light:text-emerald-600" />
+          <FaChevronDown className="animate-bounce text-[#111111] dark:text-[#FDFCFB]" />
         </a>
       </div>
     </section>

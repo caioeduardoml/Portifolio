@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaMoon, FaSun, FaGithub, FaBars, FaTimes } from 'react-icons/fa';
+import { FourPointStar } from '~components/HandcraftedOrnaments';
 import type { NavItem } from '~types/portfolio';
 
 interface NavbarProps {
@@ -79,28 +80,28 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
     <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 lg:px-10 pt-3 sm:pt-4 transition-all duration-300">
       <nav
         aria-label="Navegação principal"
-        className={`mx-auto max-w-7xl flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl border transition-all duration-300 ${
+        className={`mx-auto max-w-7xl flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl border-[1.5px] transition-colors duration-200 ${
           isScrolled
-            ? 'bg-[#07090e]/88 light:bg-white/90 backdrop-blur-xl border-white/10 light:border-slate-200/90 shadow-lg shadow-black/30 light:shadow-slate-900/5'
-            : 'bg-[#07090e]/65 light:bg-white/75 backdrop-blur-md border-white/5 light:border-slate-200/60'
+            ? 'bg-[#FFFFFF] dark:bg-[#171717] border-[#171717] dark:border-[#FDFCFB]'
+            : 'bg-[#FDFCFB] dark:bg-[#111111] border-[#171717] dark:border-[#FDFCFB]'
         }`}
       >
         {/* Logotipo */}
         <a
           href="#home"
           onClick={(e) => handleScroll(e, '#home')}
-          className="flex items-center gap-2 text-lg sm:text-xl font-bold tracking-tight text-white light:text-slate-900 cursor-pointer min-h-[44px] px-1"
+          className="flex items-center gap-2.5 text-lg sm:text-xl font-bold tracking-tight text-[#111111] dark:text-[#FDFCFB] cursor-pointer min-h-[44px] px-1"
         >
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#39FF14]/15 light:bg-emerald-600/15 border border-[#39FF14]/40 light:border-emerald-600/40 text-[#39FF14] light:text-emerald-700 font-mono-code text-sm">
-            &lt;/&gt;
+          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] border border-[#171717] dark:border-[#FDFCFB] font-mono-code text-xs">
+            <FourPointStar className="w-4 h-4" />
           </span>
           <span className="font-display">
-            CAIO<span className="text-[#39FF14] light:text-emerald-600">.DEV</span>
+            CAIO<span className="text-[#555555] dark:text-[#A5A19C]">.DEV</span>
           </span>
         </a>
 
         {/* Links Desktop */}
-        <ul className="hidden md:flex items-center gap-1 lg:gap-2 list-none m-0 p-0">
+        <ul className="hidden md:flex items-center gap-1 lg:gap-1.5 list-none m-0 p-0">
           {NAV_LINKS.map((link) => {
             const isActive = activeSection === link.sectionId;
             return (
@@ -109,10 +110,10 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
                   href={link.href}
                   onClick={(e) => handleScroll(e, link.href)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`inline-flex items-center justify-center min-h-[44px] px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${
+                  className={`inline-flex items-center justify-center min-h-[40px] px-4 py-1.5 rounded-full text-sm font-medium border transition-colors duration-200 cursor-pointer ${
                     isActive
-                      ? 'text-[#39FF14] light:text-emerald-700 bg-[#39FF14]/10 light:bg-emerald-600/10 font-semibold'
-                      : 'text-slate-300 light:text-slate-600 hover:text-white light:hover:text-slate-900 hover:bg-white/5 light:hover:bg-slate-100'
+                      ? 'bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] border-[#171717] dark:border-[#FDFCFB] font-semibold'
+                      : 'bg-transparent text-[#555555] dark:text-[#D8D5D1] border-transparent hover:text-[#111111] dark:hover:text-[#FDFCFB] hover:border-[#171717] dark:hover:border-[#FDFCFB]'
                   }`}
                 >
                   {link.label}
@@ -129,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Perfil no GitHub de Caio Eduardo"
-            className="hidden sm:inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-xl border border-white/10 light:border-slate-200 bg-white/5 light:bg-slate-100 text-slate-200 light:text-slate-700 hover:text-[#39FF14] light:hover:text-emerald-700 hover:border-[#39FF14]/40 light:hover:border-emerald-600/40 transition-colors duration-200 cursor-pointer"
+            className="hidden sm:inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full border-[1.5px] border-[#171717] dark:border-[#FDFCFB] bg-[#FFFFFF] dark:bg-[#1A1A1A] text-[#111111] dark:text-[#FDFCFB] hover:bg-[#111111] hover:text-[#FDFCFB] dark:hover:bg-[#FDFCFB] dark:hover:text-[#111111] transition-colors duration-200 cursor-pointer"
           >
             <FaGithub className="text-lg" />
           </a>
@@ -137,17 +138,17 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
           <button
             type="button"
             onClick={onToggleTheme}
-            aria-label={isLight ? 'Ativar tema escuro' : 'Ativar tema claro'}
-            title={isLight ? 'Ativar tema escuro' : 'Ativar tema claro'}
-            className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-xl border border-white/10 light:border-slate-200 bg-white/5 light:bg-slate-100 text-slate-200 light:text-slate-700 hover:text-[#39FF14] light:hover:text-emerald-700 hover:border-[#39FF14]/40 light:hover:border-emerald-600/40 transition-colors duration-200 cursor-pointer"
+            aria-label={isLight ? 'Ativar tema escuro monocromático' : 'Ativar tema claro monocromático'}
+            title={isLight ? 'Ativar modo escuro monocromático' : 'Ativar modo claro monocromático'}
+            className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full border-[1.5px] border-[#171717] dark:border-[#FDFCFB] bg-[#FFFFFF] dark:bg-[#1A1A1A] text-[#111111] dark:text-[#FDFCFB] hover:bg-[#111111] hover:text-[#FDFCFB] dark:hover:bg-[#FDFCFB] dark:hover:text-[#111111] transition-colors duration-200 cursor-pointer"
           >
-            {isLight ? <FaMoon className="text-base" /> : <FaSun className="text-base text-amber-300" />}
+            {isLight ? <FaMoon className="text-base" /> : <FaSun className="text-base" />}
           </button>
 
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hidden lg:inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#39FF14] light:bg-emerald-600 text-slate-950 light:text-white hover:brightness-110 transition-all duration-200 cursor-pointer shadow-md shadow-[#39FF14]/15 light:shadow-emerald-600/20"
+            className="hidden lg:inline-flex items-center justify-center min-h-[44px] px-5 py-2 rounded-full text-xs font-mono-code font-semibold uppercase tracking-wider bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] hover:bg-[#FFFFFF] hover:text-[#111111] dark:hover:bg-[#111111] dark:hover:text-[#FDFCFB] transition-colors duration-200 cursor-pointer"
           >
             Fale Comigo
           </a>
@@ -159,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
             aria-label={isOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
             aria-expanded={isOpen}
             aria-controls="mobile-navigation-drawer"
-            className="inline-flex md:hidden items-center justify-center min-w-[44px] min-h-[44px] rounded-xl border border-white/10 light:border-slate-200 bg-white/5 light:bg-slate-100 text-white light:text-slate-900 hover:text-[#39FF14] light:hover:text-emerald-700 transition-colors duration-200 cursor-pointer z-50"
+            className="inline-flex md:hidden items-center justify-center min-w-[44px] min-h-[44px] rounded-full border-[1.5px] border-[#171717] dark:border-[#FDFCFB] bg-[#FFFFFF] dark:bg-[#1A1A1A] text-[#111111] dark:text-[#FDFCFB] hover:bg-[#111111] hover:text-[#FDFCFB] dark:hover:bg-[#FDFCFB] dark:hover:text-[#111111] transition-colors duration-200 cursor-pointer z-50"
           >
             {isOpen ? <FaTimes className="text-lg" /> : <FaBars className="text-lg" />}
           </button>
@@ -171,17 +172,17 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
         <div
           aria-hidden="true"
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden"
+          className="fixed inset-0 bg-[#111111]/40 z-40 md:hidden"
         />
       )}
 
       <div
         id="mobile-navigation-drawer"
-        className={`fixed top-0 right-0 h-dvh w-[min(82vw,320px)] bg-[#0b0f17]/98 light:bg-white/98 backdrop-blur-xl border-l border-white/10 light:border-slate-200 z-40 md:hidden flex flex-col justify-between p-6 pt-24 transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 h-dvh w-[min(82vw,320px)] bg-[#FDFCFB] dark:bg-[#111111] border-l-[1.5px] border-[#171717] dark:border-[#FDFCFB] z-40 md:hidden flex flex-col justify-between p-6 pt-24 transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none'
         }`}
       >
-        <ul className="flex flex-col gap-2 list-none m-0 p-0">
+        <ul className="flex flex-col gap-2.5 list-none m-0 p-0">
           {NAV_LINKS.map((link) => {
             const isActive = activeSection === link.sectionId;
             return (
@@ -189,27 +190,25 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
                 <a
                   href={link.href}
                   onClick={(e) => handleScroll(e, link.href)}
-                  className={`flex items-center justify-between w-full min-h-[48px] px-4 rounded-xl text-base font-medium transition-colors duration-200 cursor-pointer ${
+                  className={`flex items-center justify-between w-full min-h-[48px] px-5 rounded-full text-base font-medium border-[1.5px] transition-colors duration-200 cursor-pointer ${
                     isActive
-                      ? 'bg-[#39FF14]/15 light:bg-emerald-600/12 text-[#39FF14] light:text-emerald-700 font-semibold border border-[#39FF14]/30 light:border-emerald-600/30'
-                      : 'text-slate-300 light:text-slate-700 hover:bg-white/5 light:hover:bg-slate-100'
+                      ? 'bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] border-[#171717] dark:border-[#FDFCFB] font-semibold'
+                      : 'bg-[#FFFFFF] dark:bg-[#1A1A1A] text-[#111111] dark:text-[#FDFCFB] border-[#D8D5D1] dark:border-[#333333] hover:border-[#171717] dark:hover:border-[#FDFCFB]'
                   }`}
                 >
                   <span>{link.label}</span>
-                  {isActive && (
-                    <span className="w-2 h-2 rounded-full bg-[#39FF14] light:bg-emerald-600" />
-                  )}
+                  {isActive && <FourPointStar className="w-3.5 h-3.5" />}
                 </a>
               </li>
             );
           })}
         </ul>
 
-        <div className="pt-6 border-t border-white/10 light:border-slate-200 flex flex-col gap-3">
+        <div className="pt-6 border-t border-[#D8D5D1] dark:border-[#333333] flex flex-col gap-3">
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="flex items-center justify-center w-full min-h-[48px] rounded-xl font-semibold text-sm bg-[#39FF14] light:bg-emerald-600 text-slate-950 light:text-white cursor-pointer"
+            className="flex items-center justify-center w-full min-h-[48px] rounded-full font-semibold text-sm bg-[#111111] dark:bg-[#FDFCFB] text-[#FDFCFB] dark:text-[#111111] border-[1.5px] border-[#171717] dark:border-[#FDFCFB] hover:bg-[#FFFFFF] hover:text-[#111111] dark:hover:bg-[#111111] dark:hover:text-[#FDFCFB] transition-colors cursor-pointer"
           >
             Entrar em Contato
           </a>
@@ -217,7 +216,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLight, onToggleTheme }) => {
             href="https://github.com/caioeduardoml"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full min-h-[48px] rounded-xl font-medium text-sm border border-white/10 light:border-slate-200 text-slate-300 light:text-slate-700 hover:text-white light:hover:text-slate-900 cursor-pointer"
+            className="flex items-center justify-center gap-2 w-full min-h-[48px] rounded-full font-medium text-sm border-[1.5px] border-[#171717] dark:border-[#FDFCFB] bg-[#FFFFFF] dark:bg-[#1A1A1A] text-[#111111] dark:text-[#FDFCFB] hover:bg-[#111111] hover:text-[#FDFCFB] dark:hover:bg-[#FDFCFB] dark:hover:text-[#111111] transition-colors cursor-pointer"
           >
             <FaGithub className="text-base" />
             <span>GitHub (@caioeduardoml)</span>

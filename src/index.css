@@ -1,42 +1,32 @@
 @import "tailwindcss";
 
-@custom-variant light (&:where([data-theme=light], [data-theme=light] *));
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root {
-  --bg-primary: #07090e;
-  --bg-secondary: #0c1017;
-  --bg-card: rgba(17, 23, 34, 0.78);
-  --bg-card-solid: #111722;
-  --bg-elevated: rgba(255, 255, 255, 0.04);
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --accent-neon: #39ff14;
-  --accent-solid: #10b981;
-  --accent-text: #39ff14;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(57, 255, 20, 0.35);
-  --shadow-glow: 0 20px 50px -15px rgba(57, 255, 20, 0.14);
-  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --bg-primary: #fdfcfb;
+  --bg-secondary: #f5f3f0;
+  --bg-card: #ffffff;
+  --bg-elevated: #f5f3f0;
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --text-disabled: #a5a19c;
+  --border-ink: #171717;
+  --divider-subtle: #d8d5d1;
+  --font-display: 'Lora', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 }
 
-html[data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-card: rgba(255, 255, 255, 0.9);
-  --bg-card-solid: #ffffff;
-  --bg-elevated: rgba(15, 23, 42, 0.04);
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #475569;
-  --accent-neon: #16a34a;
-  --accent-solid: #15803d;
-  --accent-text: #15803d;
-  --border-subtle: rgba(15, 23, 42, 0.1);
-  --border-strong: rgba(22, 163, 74, 0.45);
-  --shadow-glow: 0 20px 50px -15px rgba(22, 163, 74, 0.15);
+html[data-theme="dark"] {
+  --bg-primary: #111111;
+  --bg-secondary: #171717;
+  --bg-card: #1a1a1a;
+  --bg-elevated: #222222;
+  --text-primary: #fdfcfb;
+  --text-secondary: #d8d5d1;
+  --text-disabled: #8c8883;
+  --border-ink: #fdfcfb;
+  --divider-subtle: #333333;
 }
 
 html,
@@ -79,11 +69,17 @@ h4,
   .backface-hidden {
     backface-visibility: hidden;
   }
+  .retro-border {
+    border: 1.5px solid var(--border-ink);
+  }
+  .retro-divider {
+    border-color: var(--divider-subtle);
+  }
 }
 
 /* Foco visivel para navegacao por teclado (WCAG 2.1 AA) */
 :focus-visible {
-  outline: 2px solid var(--accent-neon);
+  outline: 2px solid var(--border-ink);
   outline-offset: 3px;
 }
 

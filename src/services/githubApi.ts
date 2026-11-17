@@ -15,12 +15,13 @@ export interface GitHubRepoDTO {
   archived: boolean;
   stargazers_count: number;
   updated_at: string;
+  default_branch?: string;
 }
 
 const GITHUB_USERNAME = 'caioeduardoml';
 const REQUIRED_TOPIC = 'portfolio';
 const CONTROL_TOPICS = new Set(['portfolio', 'destaque', 'featured']);
-const CACHE_KEY = 'github_repos_cache_v2';
+const CACHE_KEY = 'github_repos_cache_v3';
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 6000;
 
@@ -124,6 +125,12 @@ export const mapGitHubReposToProjects = (
     .map((repo) => {
       const githubUrl = sanitizeHttpsUrl(repo.html_url);
       const liveUrl = sanitizeHttpsUrl(repo.homepage);
+      const defaultBranch = repo.default_branch?.trim() || 'main';
+      const imageUrl = sanitizeHttpsUrl(
+        `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${encodeURIComponent(
+          repo.name
+        )}/${encodeURIComponent(defaultBranch)}/preview.png`
+      );
       const displayTopics = (repo.topics ?? [])
         .filter((topic) => !CONTROL_TOPICS.has(topic.toLowerCase()))
         .slice(0, 3);
@@ -142,6 +149,7 @@ export const mapGitHubReposToProjects = (
         categories: inferCategories(repo),
         icon: pickRepoIcon(repo.language),
         techs: techs.length > 0 ? techs : ['GitHub'],
+        imageUrl,
         githubUrl,
         liveUrl,
         highlightBadge:
