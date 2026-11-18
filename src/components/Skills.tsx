@@ -308,11 +308,6 @@ export const Skills: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Cabecalho */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-          <span className="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-widest text-[#555555] dark:text-[#D8D5D1] font-medium mb-2">
-            <FourPointStar className="w-3 h-3 text-[#111111] dark:text-[#FDFCFB]" />
-            <span>02 // Stack &amp; Experiência 3D</span>
-            <FourPointStar className="w-3 h-3 text-[#111111] dark:text-[#FDFCFB]" />
-          </span>
           <h2
             id="skills-heading"
             className="text-3xl sm:text-4xl font-bold text-[#111111] dark:text-[#FDFCFB] font-display tracking-tight"

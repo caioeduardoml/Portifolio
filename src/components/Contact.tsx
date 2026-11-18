@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaGithub, FaInstagram, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa';
-import { FourPointStar, HandcraftedDivider } from '~components/HandcraftedOrnaments';
+import { HandcraftedDivider } from '~components/HandcraftedOrnaments';
 import type { SocialNetworkItem } from '~types/portfolio';
 
 const SOCIAL_NETWORKS: SocialNetworkItem[] = [
@@ -56,11 +56,6 @@ export const Contact: React.FC = () => {
       <div className="max-w-7xl mx-auto w-full">
         {/* Cabecalho */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-          <span className="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-widest text-[#555555] dark:text-[#D8D5D1] font-medium mb-2">
-            <FourPointStar className="w-3 h-3 text-[#111111] dark:text-[#FDFCFB]" />
-            <span>04 // Conexão &amp; Redes</span>
-            <FourPointStar className="w-3 h-3 text-[#111111] dark:text-[#FDFCFB]" />
-          </span>
           <h2
             id="contact-heading"
             className="text-3xl sm:text-4xl font-bold text-[#111111] dark:text-[#FDFCFB] font-display tracking-tight"
