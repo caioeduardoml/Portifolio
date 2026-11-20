@@ -3,8 +3,9 @@ import Navbar from '~components/Navbar';
 import Hero from '~components/Hero';
 import Footer from '~components/Footer';
 import SuspenseLoader from '~components/SuspenseLoader';
-import type { ThemeMode } from '~types/portfolio';
+import type { HeroVisualMode, ThemeMode } from '~types/portfolio';
 
+const HeroScene3D = lazy(() => import('~components/HeroScene3D'));
 const About = lazy(() => import('~components/About'));
 const Skills = lazy(() => import('~components/Skills'));
 const Projects = lazy(() => import('~components/Projects'));
@@ -33,6 +34,7 @@ const writeSafeTheme = (theme: ThemeMode): void => {
 
 export const App: React.FC = () => {
   const [isLight, setIsLight] = useState<boolean>(() => readSafeTheme() === 'light');
+  const [visualMode, setVisualMode] = useState<HeroVisualMode>('hybrid');
 
   useEffect(() => {
     if (isLight) {
@@ -57,10 +59,17 @@ export const App: React.FC = () => {
         Pular para o conteúdo principal
       </a>
 
+      <SuspenseLoader minHeightClass="min-h-0" label="">
+        <HeroScene3D visualMode={visualMode} isLight={isLight} />
+      </SuspenseLoader>
+
       <Navbar isLight={isLight} onToggleTheme={handleToggleTheme} />
 
-      <main>
-        <Hero isLight={isLight} />
+      <main className="relative">
+        <Hero
+          visualMode={visualMode}
+          onChangeVisualMode={setVisualMode}
+        />
 
         <SuspenseLoader minHeightClass="min-h-[420px]" label="Carregando seção Sobre...">
           <About />

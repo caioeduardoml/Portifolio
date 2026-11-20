@@ -45,30 +45,54 @@ const checkWebGLAvailable = (): boolean => {
   }
 };
 
+interface ScrollKeyframe {
+  p: number;
+  x: number;
+  y: number;
+  z: number;
+}
+
+const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
+const smoothstep = (t: number): number => t * t * (3 - 2 * t);
+
+const sampleScrollPose = (progress: number, isMobile: boolean): { x: number; y: number; z: number } => {
+  const xOffset = isMobile ? 1.1 : 2.55;
+  const baseZ = isMobile ? 8.2 : 6.4;
+  const sideZ = isMobile ? 8.5 : 6.7;
+
+  // Coreografia: Centro (Hero) -> Direita (Sobre) -> Esquerda (Skills) -> Direita (Projetos) -> Centro -> Zoom Interno (Contato/Fim)
+  const keyframes: ScrollKeyframe[] = [
+    { p: 0.0, x: 0, y: 0, z: baseZ },
+    { p: 0.22, x: xOffset, y: 0.15, z: sideZ },
+    { p: 0.48, x: -xOffset, y: -0.1, z: sideZ },
+    { p: 0.72, x: xOffset, y: 0.1, z: sideZ },
+    { p: 0.88, x: 0, y: 0, z: isMobile ? 4.8 : 4.2 },
+    { p: 1.0, x: 0, y: 0, z: 0.28 },
+  ];
+
+  const clamped = Math.max(0, Math.min(1, progress));
+  for (let i = 0; i < keyframes.length - 1; i++) {
+    const curr = keyframes[i]!;
+    const next = keyframes[i + 1]!;
+    if (clamped >= curr.p && clamped <= next.p) {
+      const span = Math.max(0.0001, next.p - curr.p);
+      const localT = smoothstep((clamped - curr.p) / span);
+      return {
+        x: lerp(curr.x, next.x, localT),
+        y: lerp(curr.y, next.y, localT),
+        z: lerp(curr.z, next.z, localT),
+      };
+    }
+  }
+  const last = keyframes[keyframes.length - 1]!;
+  return { x: last.x, y: last.y, z: last.z };
+};
+
 export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const webglCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const synapseCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const [webGLSupported] = useState<boolean>(() => checkWebGLAvailable());
-  const isVisibleRef = useRef<boolean>(true);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry) {
-          isVisibleRef.current = entry.isIntersecting;
-        }
-      },
-      { threshold: 0.05 }
-    );
-
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
 
   // Cena 3D WebGL Monocromatica com Three.js
   useEffect(() => {
@@ -187,7 +211,21 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     scene.add(pointLight);
 
     const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
-    let scrollOffset = 0;
+    let scrollProgress = 0;
+    let isMobileNow = isMobile;
+
+    const computeScrollProgress = (): number => {
+      const maxScroll = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+      return Math.max(0, Math.min(1, window.scrollY / maxScroll));
+    };
+
+    scrollProgress = computeScrollProgress();
+    const initialPose = sampleScrollPose(scrollProgress, isMobileNow);
+    const currentPose = { ...initialPose };
+    camera.position.z = currentPose.z;
 
     const handlePointerMove = (e: MouseEvent): void => {
       pointer.targetX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -202,18 +240,17 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     };
 
     const handleScroll = (): void => {
-      scrollOffset = window.scrollY / Math.max(1, window.innerHeight);
+      scrollProgress = computeScrollProgress();
     };
 
     const handleResize = (): void => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      const mobileNow = width < 768;
+      isMobileNow = width < 768;
       camera.aspect = width / Math.max(1, height);
-      camera.position.set(0, 0, mobileNow ? 8.2 : 6.4);
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
-      renderer.setPixelRatio(mobileNow ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(isMobileNow ? 1 : Math.min(window.devicePixelRatio || 1, 2));
     };
 
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
@@ -226,7 +263,7 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
 
     const animate = (): void => {
       frameId = requestAnimationFrame(animate);
-      if (!isVisibleRef.current || document.hidden) return;
+      if (document.hidden) return;
 
       const speedFactor = prefersReducedMotion ? 0.15 : 1;
       clockTime += 0.006 * speedFactor;
@@ -234,39 +271,50 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
       pointer.x += (pointer.targetX - pointer.x) * 0.06;
       pointer.y += (pointer.targetY - pointer.y) * 0.06;
 
+      const targetPose = prefersReducedMotion
+        ? { x: 0, y: 0, z: isMobileNow ? 8.2 : 6.4 }
+        : sampleScrollPose(scrollProgress, isMobileNow);
+
+      currentPose.x += (targetPose.x - currentPose.x) * 0.08;
+      currentPose.y += (targetPose.y - currentPose.y) * 0.08;
+      currentPose.z += (targetPose.z - currentPose.z) * 0.08;
+
+      camera.position.set(0, 0, currentPose.z);
+
       outerWireframe.rotation.set(
-        clockTime * 0.55 + pointer.y * 0.35 + scrollOffset * 0.8,
-        clockTime * 0.75 + pointer.x * 0.45 + scrollOffset * 1.2,
+        clockTime * 0.55 + pointer.y * 0.35 + scrollProgress * 3.2,
+        clockTime * 0.75 + pointer.x * 0.45 + scrollProgress * 4.5,
         clockTime * 0.2
       );
 
       innerMesh.rotation.set(
-        -clockTime * 0.9 - pointer.y * 0.25,
-        -clockTime * 1.1 + pointer.x * 0.3,
+        -clockTime * 0.9 - pointer.y * 0.25 - scrollProgress * 2.4,
+        -clockTime * 1.1 + pointer.x * 0.3 + scrollProgress * 3.6,
         clockTime * 0.4
       );
 
       ring1Mesh.rotation.set(
-        Math.PI / 2.6 + Math.sin(clockTime) * 0.22 + pointer.y * 0.2,
+        Math.PI / 2.6 + Math.sin(clockTime) * 0.22 + pointer.y * 0.2 + scrollProgress * 1.4,
         0.3 + clockTime * 0.4,
         clockTime * 0.3
       );
 
       ring2Mesh.rotation.set(
-        -Math.PI / 3.2 + Math.cos(clockTime * 0.8) * 0.2,
+        -Math.PI / 3.2 + Math.cos(clockTime * 0.8) * 0.2 - scrollProgress * 1.1,
         -0.5 - clockTime * 0.35,
         0.4 - clockTime * 0.25
       );
 
+      const parallaxScale = Math.max(0.15, Math.min(1, currentPose.z / 6.4));
       rootGroup.position.set(
-        pointer.x * (isMobile ? 0.3 : 0.65),
-        pointer.y * (isMobile ? 0.25 : 0.45) - scrollOffset * 1.1,
+        currentPose.x + pointer.x * (isMobileNow ? 0.22 : 0.45) * parallaxScale,
+        currentPose.y + pointer.y * (isMobileNow ? 0.18 : 0.32) * parallaxScale,
         0
       );
 
       particles.rotation.set(
-        pointer.y * 0.08 + scrollOffset * 0.2,
-        clockTime * 0.12 + pointer.x * 0.08,
+        pointer.y * 0.08 + scrollProgress * 0.6,
+        clockTime * 0.12 + pointer.x * 0.08 + scrollProgress * 0.9,
         0
       );
 
@@ -523,7 +571,10 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
     let animationId = 0;
     const loop = (): void => {
       animationId = requestAnimationFrame(loop);
-      if (!isVisibleRef.current || document.hidden) return;
+      if (document.hidden) return;
+      const heroFade = Math.max(0, 1 - window.scrollY / Math.max(1, window.innerHeight * 0.85));
+      canvas.style.opacity = heroFade.toFixed(2);
+      if (heroFade <= 0.01) return;
       ctx.clearRect(0, 0, w, h);
       draw();
     };
@@ -571,7 +622,7 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ visualMode, isLight })
   }, [visualMode, isLight]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div ref={containerRef} className="fixed inset-0 z-[1] overflow-hidden pointer-events-none">
       {/* Camada WebGL 3D (Three.js) */}
       {webGLSupported && visualMode !== 'synapse' && (
         <canvas

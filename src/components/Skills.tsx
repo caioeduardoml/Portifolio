@@ -305,7 +305,7 @@ export const Skills: React.FC = () => {
       aria-labelledby="skills-heading"
       className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 bg-[var(--bg-primary)] border-b border-[#D8D5D1] dark:border-[#333333] transition-colors duration-300 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Cabecalho */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <h2

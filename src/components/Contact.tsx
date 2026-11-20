@@ -27,9 +27,9 @@ const SOCIAL_NETWORKS: SocialNetworkItem[] = [
   {
     id: 'whatsapp',
     name: 'WhatsApp',
-    handle: '+55 (63) 9928-6775',
+    handle: '+55 (63) 99286-5775',
     description: 'Contato rápido direto para projetos e parcerias.',
-    href: 'https://wa.me/556399286775',
+    href: 'https://wa.me/5563992865775',
     accentHex: '#111111',
     hoverBgClass: 'hover:bg-[#111111] hover:text-[#FDFCFB] dark:hover:bg-[#FDFCFB] dark:hover:text-[#111111]',
     icon: <FaWhatsapp />,
@@ -53,7 +53,7 @@ export const Contact: React.FC = () => {
       aria-labelledby="contact-heading"
       className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 min-h-[75dvh] flex flex-col justify-center bg-[var(--bg-primary)] transition-colors duration-300 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full">
+      <div className="max-w-7xl mx-auto w-full relative z-10">
         {/* Cabecalho */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <h2

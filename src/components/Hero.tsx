@@ -1,14 +1,12 @@
-import React, { useState, useCallback, lazy } from 'react';
+import React, { useCallback } from 'react';
 import { FaArrowRight, FaChevronDown } from 'react-icons/fa';
 import DecryptedText from '~components/DecryptedText';
-import SuspenseLoader from '~components/SuspenseLoader';
 import { FourPointStar, HandcraftedSparkle } from '~components/HandcraftedOrnaments';
 import type { HeroVisualMode } from '~types/portfolio';
 
-const HeroScene3D = lazy(() => import('~components/HeroScene3D'));
-
 interface HeroProps {
-  isLight: boolean;
+  visualMode: HeroVisualMode;
+  onChangeVisualMode: (mode: HeroVisualMode) => void;
 }
 
 const HERO_TAGS: string[] = [
@@ -27,8 +25,7 @@ const VISUAL_MODES: { id: HeroVisualMode; label: string }[] = [
   { id: 'synapse', label: 'Sinapses' },
 ];
 
-export const Hero: React.FC<HeroProps> = ({ isLight }) => {
-  const [visualMode, setVisualMode] = useState<HeroVisualMode>('hybrid');
+export const Hero: React.FC<HeroProps> = ({ visualMode, onChangeVisualMode }) => {
 
   const scrollToSection = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, targetId: string): void => {
@@ -50,11 +47,6 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
       aria-labelledby="hero-heading"
       className="relative min-h-dvh w-full flex flex-col justify-between items-center pt-28 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-10 overflow-hidden bg-[var(--bg-primary)] border-b border-[#D8D5D1] dark:border-[#333333] transition-colors duration-300"
     >
-      {/* Cena 3D Interativa em Background */}
-      <SuspenseLoader minHeightClass="min-h-0" label="Inicializando motor 3D...">
-        <HeroScene3D visualMode={visualMode} isLight={isLight} />
-      </SuspenseLoader>
-
       {/* Espacador superior para equilibrar o centro vertical */}
       <div aria-hidden="true" className="hidden sm:block h-2" />
 
@@ -145,7 +137,7 @@ export const Hero: React.FC<HeroProps> = ({ isLight }) => {
               <button
                 key={mode.id}
                 type="button"
-                onClick={() => setVisualMode(mode.id)}
+                onClick={() => onChangeVisualMode(mode.id)}
                 aria-pressed={active}
                 className={`min-h-[36px] px-3.5 py-1 rounded-full text-xs font-mono-code font-medium transition-colors duration-200 cursor-pointer ${
                   active

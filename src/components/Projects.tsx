@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   FaLaptopCode,
-  FaMicrochip,
   FaGithub,
   FaExternalLinkAlt,
 } from 'react-icons/fa';
@@ -22,21 +21,10 @@ const PROJECTS_DATA: ProjectItem[] = [
     categories: ['todos', 'destaques', 'web'],
     icon: <FaLaptopCode />,
     techs: ['React', 'TypeScript', 'Tailwind CSS', 'Design Responsivo'],
-    imageUrl: '/roboaputfpr.png',
+    imageUrl: '/roboaputfpr.webp',
     githubUrl: 'https://github.com/caioeduardoml',
     liveUrl: 'https://roboaputfpr.netlify.app',
     highlightBadge: 'Destaque Web',
-  },
-  {
-    id: 'simulador-so',
-    title: 'Simulador de Processos de S.O.',
-    subtitle: 'Escalonamento de CPU & Diagrama de Tempo',
-    desc: 'Simulador visual de escalonamento de processos de Sistemas Operacionais com suporte a algoritmos Round Robin, SJF Preemptivo e SJF por Prioridade com diagrama de Gantt.',
-    categories: ['todos', 'sistemas'],
-    icon: <FaMicrochip />,
-    techs: ['C', 'C++', 'QtCreator', 'Sistemas Operacionais'],
-    githubUrl: 'https://github.com/Gu1-Fr4nc0/-Simulador_de_Sistemas_Operacionais',
-    highlightBadge: 'Engenharia de S.O.',
   },
 ];
 
@@ -86,6 +74,8 @@ const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project }) => {
           <img
             src={project.imageUrl}
             alt={`Pré-visualização do projeto ${project.title}`}
+            width={1280}
+            height={640}
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
@@ -221,7 +211,7 @@ export const Projects: React.FC = () => {
       aria-labelledby="projects-heading"
       className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 bg-[var(--bg-secondary)] border-b border-[#D8D5D1] dark:border-[#333333] transition-colors duration-300"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Cabecalho */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
           <h2

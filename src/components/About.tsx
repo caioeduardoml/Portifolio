@@ -52,7 +52,7 @@ export const About: React.FC = () => {
       aria-labelledby="about-heading"
       className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 bg-[var(--bg-secondary)] border-b border-[#D8D5D1] dark:border-[#333333] transition-colors duration-300 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Cabecalho da Secao */}
         <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
           <h2
